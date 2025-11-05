@@ -47,4 +47,7 @@ async function getWeather(city) {
   }
 }
 
+window.addEventListener("load", () => {
+  getWeather("Vienna");
+});
 
