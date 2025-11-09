@@ -5,6 +5,8 @@ const searchBtn = document.getElementById("search-btn");
 
 const cityName = document.getElementById("city-name");
 const temperature = document.getElementById("temperature");
+const feelsLike = document.getElementById("feels-like");
+const humidity = document.getElementById("humidity");
 const description = document.getElementById("description");
 const wind = document.getElementById("wind");
 const icon = document.getElementById("weather-icon");
@@ -32,6 +34,8 @@ async function getWeather(city) {
       message.textContent = "City not found 😢";
       cityName.textContent = "";
       temperature.textContent = "";
+      feelsLike.textContent = "";
+      humidity.textContent = "";
       description.textContent = "";
       wind.textContent = "";
       return;
@@ -73,6 +77,8 @@ async function getWeather(city) {
   
     cityName.textContent = data.name;
     temperature.textContent = `Temperature: ${data.main.temp}°C`;
+    feelsLike.textContent = `Feels like: ${data.main.feels_like}°C`;
+    humidity.textContent = `Humidity: ${data.main.humidity}%`;
     description.textContent = data.weather[0].description;
     wind.textContent = `${data.wind.speed} m/s`;
     icon.textContent = emoji; 
