@@ -1,29 +1,32 @@
 const apiKey = "b2d857f1ee7b26af47c0d4d12a3b0e36";
-const cityInput = document.getElementById("city-input");
-const message = document.getElementById("message");
-const searchBtn = document.getElementById("search-btn");
+const ui = {
+  cityName: document.getElementById("city-name"),
+  temperature: document.getElementById("temperature"),
+  feelsLike: document.getElementById("feels-like"),
+  humidity: document.getElementById("humidity"),
+  description: document.getElementById("description"),
+  wind: document.getElementById("wind"),
+  icon: document.getElementById("weather-icon"),
+  timeIcon: document.getElementById("time-icon"),
+  message: document.getElementById("message"),
+  input: document.getElementById("city-input"),
+  button: document.getElementById("search-btn"),
+};
 
-const cityName = document.getElementById("city-name");
-const temperature = document.getElementById("temperature");
-const feelsLike = document.getElementById("feels-like");
-const humidity = document.getElementById("humidity");
-const description = document.getElementById("description");
-const wind = document.getElementById("wind");
-const icon = document.getElementById("weather-icon");
 
 
-searchBtn.addEventListener("click", () => {
-  const city = cityInput.value;
+ui.button.addEventListener("click", () => {
+  const city = ui.input.value;
   getWeather(city);
 });
-cityInput.addEventListener("keydown", (event) => {
+ui.input.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
-    getWeather(cityInput.value);
+    getWeather(ui.input.value);
   }
 });
 
 async function getWeather(city) {
-  message.textContent = "Loading...";
+  ui.message.textContent = "Loading...";
   try {
     const response = await fetch(
       `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
@@ -31,17 +34,17 @@ async function getWeather(city) {
     const data = await response.json();
 
     if (data.cod !== 200) {
-      message.textContent = "City not found 😢";
-      cityName.textContent = "";
-      temperature.textContent = "";
-      feelsLike.textContent = "";
-      humidity.textContent = "";
-      description.textContent = "";
-      wind.textContent = "";
+      ui.message.textContent = "City not found 😢";
+      ui.cityName.textContent = "";
+      ui.temperature.textContent = "";
+      ui.feelsLike.textContent = "";
+      ui.humidity.textContent = "";
+      ui.description.textContent = "";
+      ui.wind.textContent = "";
       return;
     }
 
-    message.textContent = "";
+    ui.message.textContent = "";
 
     const weatherMain = data.weather[0].main.toLowerCase();
 
@@ -52,7 +55,6 @@ async function getWeather(city) {
 
     const body = document.body;
 
-    // simple day/night backgrounds
     if (isDay) {
       body.style.background = "linear-gradient(to bottom, #87ceeb, #f0f8ff)"; 
     } else {
@@ -60,7 +62,6 @@ async function getWeather(city) {
     }
     body.style.transition = "background 1s ease";
 
-    // show sun/moon icon
     const timeIcon = document.getElementById("time-icon");
     if (timeIcon) timeIcon.textContent = isDay ? "☀️" : "🌙";
 
@@ -75,17 +76,17 @@ async function getWeather(city) {
     else if (weatherMain.includes("mist")) emoji = "🌫️"; 
 
   
-    cityName.textContent = data.name;
-    temperature.textContent = `Temperature: ${data.main.temp}°C`;
-    feelsLike.textContent = `Feels like: ${data.main.feels_like}°C`;
-    humidity.textContent = `Humidity: ${data.main.humidity}%`;
-    description.textContent = data.weather[0].description;
-    wind.textContent = `${data.wind.speed} m/s`;
-    icon.textContent = emoji; 
+    ui.cityName.textContent = data.name;
+    ui.temperature.textContent = `Temperature: ${data.main.temp}°C`;
+    ui.feelsLike.textContent = `Feels like: ${data.main.feels_like}°C`;
+    ui.humidity.textContent = `Humidity: ${data.main.humidity}%`;
+    ui.description.textContent = data.weather[0].description;
+    ui.wind.textContent = `${data.wind.speed} m/s`;
+    ui.icon.textContent = emoji; 
 
   } catch (error) {
     console.error(error);
-    message.textContent = "Something went wrong. Please try again.";
+    ui.message.textContent = "Something went wrong. Please try again.";
   }
 }
 
