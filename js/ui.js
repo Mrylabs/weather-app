@@ -10,34 +10,36 @@ const ui = {
   message: document.getElementById("message"),
 };
 
-export function renderWeather(data) {
-  const weatherMain = data.weather[0].main.toLowerCase();
-  const now = data.dt;
-  const sunrise = data.sys.sunrise;
-  const sunset = data.sys.sunset;
-  const isDay = now >= sunrise && now < sunset;
+export function renderWeather(state) {
+  const weather = state.weather;
+  if (!weather) return;
 
-  document.body.style.background = isDay
+  const weatherMain = weather.weather[0].main.toLowerCase();
+  const description = weather.weather[0].description;
+
+  document.body.style.background = state.isDay
     ? "linear-gradient(to bottom, #87ceeb, #f0f8ff)"
     : "linear-gradient(to bottom, #0f2027, #203a43, #2c5364)";
 
-  ui.timeIcon.textContent = isDay ? "☀️" : "🌙";
+  ui.timeIcon.textContent = state.isDay ? "☀️" : "🌙";
 
   let emoji = "";
-  if (weatherMain.includes("clear")) emoji = isDay ? "☀️" : "🌙";
+  if (weatherMain.includes("clear")) emoji = state.isDay ? "☀️" : "🌙";
   else if (weatherMain.includes("cloud")) emoji = "☁️";
   else if (weatherMain.includes("rain")) emoji = "🌧️";
   else if (weatherMain.includes("snow")) emoji = "❄️";
   else if (weatherMain.includes("thunder")) emoji = "⚡";
   else if (weatherMain.includes("mist")) emoji = "🌫️";
 
-  ui.cityName.textContent = data.name;
-  ui.temperature.textContent = `Temperature: ${data.main.temp}°C`;
-  ui.feelsLike.textContent = `Feels like: ${data.main.feels_like}°C`;
-  ui.humidity.textContent = `Humidity: ${data.main.humidity}%`;
-  ui.description.textContent = data.weather[0].description;
-  ui.wind.textContent = `${data.wind.speed} m/s`;
+
+  ui.cityName.textContent = weather.name;
+  ui.temperature.textContent = `Temperature: ${Math.round(weather.main.temp)}°C`;
+  ui.feelsLike.textContent = `Feels like: ${Math.round(weather.main.feels_like)}°C`;
+  ui.humidity.textContent = `Humidity: ${weather.main.humidity}%`;
+  ui.description.textContent = description;
+  ui.wind.textContent = `Wind: ${weather.wind.speed} m/s`;
   ui.icon.textContent = emoji;
+  ui.message.textContent = "";
 }
 
 export function renderError(message) {
@@ -51,4 +53,3 @@ export function renderError(message) {
   ui.icon.textContent = "";
   ui.timeIcon.textContent = "";
 }
-
