@@ -11,6 +11,8 @@ let appState = {
 const searchBtn = document.getElementById("search-btn");
 const cityInput = document.getElementById("city-input");
 const unitToggle = document.getElementById("unit-toggle");
+const locationBtn = document.getElementById("location-btn");
+
 
 async function updateState(city) {
   appState.city = city;
@@ -80,5 +82,8 @@ unitToggle.addEventListener("click", () => {
   updateState(appState.city);
 });
 
+locationBtn.addEventListener("click", () => {
+  getMyLocation();
+});
 
 window.addEventListener("load", () => getMyLocation());
