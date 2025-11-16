@@ -26,6 +26,8 @@ async function updateState(city) {
 
     appState.weather = data;
 
+    localStorage.setItem("lastCity", city);
+
     const now = data.dt;
     const { sunrise, sunset } = data.sys;
     appState.isDay = now >= sunrise && now < sunset;
@@ -71,6 +73,7 @@ async function getMyLocation() {
   }
 }
 
+
 searchBtn.addEventListener("click", () => updateState(cityInput.value));
 
 cityInput.addEventListener("keydown", (e) => {
@@ -86,4 +89,14 @@ locationBtn.addEventListener("click", () => {
   getMyLocation();
 });
 
-window.addEventListener("load", () => getMyLocation());
+
+window.addEventListener("load", () => {
+  const savedCity = localStorage.getItem("lastCity");
+
+  if (savedCity) {
+    updateState(savedCity);
+  } else {
+    getMyLocation();
+  }
+});
+
