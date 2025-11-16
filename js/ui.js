@@ -31,10 +31,11 @@ export function renderWeather(state) {
   else if (weatherMain.includes("thunder")) emoji = "⚡";
   else if (weatherMain.includes("mist")) emoji = "🌫️";
 
+  const unitSymbol = state.unit === "metric" ? "°C" : "°F";
+  ui.temperature.textContent = `Temperature: ${Math.round(weather.main.temp)}${unitSymbol}`;
+  ui.feelsLike.textContent = `Feels like: ${Math.round(weather.main.feels_like)}${unitSymbol}`;
 
   ui.cityName.textContent = weather.name;
-  ui.temperature.textContent = `Temperature: ${Math.round(weather.main.temp)}°C`;
-  ui.feelsLike.textContent = `Feels like: ${Math.round(weather.main.feels_like)}°C`;
   ui.humidity.textContent = `Humidity: ${weather.main.humidity}%`;
   ui.description.textContent = description;
   ui.wind.textContent = `Wind: ${weather.wind.speed} m/s`;

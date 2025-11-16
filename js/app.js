@@ -82,7 +82,11 @@ cityInput.addEventListener("keydown", (e) => {
 
 unitToggle.addEventListener("click", () => {
   appState.unit = appState.unit === "metric" ? "imperial" : "metric";
-  updateState(appState.city);
+  localStorage.setItem("unit", appState.unit);
+
+  if (appState.city) {
+    updateState(appState.city);
+  }
 });
 
 locationBtn.addEventListener("click", () => {
@@ -92,6 +96,7 @@ locationBtn.addEventListener("click", () => {
 
 window.addEventListener("load", () => {
   const savedCity = localStorage.getItem("lastCity");
+  appState.unit = localStorage.getItem("unit") || "metric";
 
   if (savedCity) {
     updateState(savedCity);
