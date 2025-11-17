@@ -39,6 +39,12 @@ async function updateState(city) {
   }
 }
 
+function autoRefresh() {
+  if (!appState.city) return;
+  console.log("🔄 Auto-refreshing weather...");
+  updateState(appState.city);
+}
+
 async function getMyLocation() {
   try {
     if (!navigator.geolocation) {
@@ -83,10 +89,7 @@ cityInput.addEventListener("keydown", (e) => {
 unitToggle.addEventListener("click", () => {
   appState.unit = appState.unit === "metric" ? "imperial" : "metric";
   localStorage.setItem("unit", appState.unit);
-
-  if (appState.city) {
-    updateState(appState.city);
-  }
+  updateState(appState.city);
 });
 
 locationBtn.addEventListener("click", () => {
@@ -103,5 +106,5 @@ window.addEventListener("load", () => {
   } else {
     getMyLocation();
   }
+  setInterval(autoRefresh, 10 * 60 * 1000);
 });
-
