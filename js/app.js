@@ -1,5 +1,5 @@
-import { getWeather, getWeatherByCoords } from "./api.js";
-import { renderWeather, renderError } from "./ui.js";
+import { getWeather, getWeatherByCoords, getDailyForecast } from "./api.js";
+import { renderWeather, renderError, renderForecast } from "./ui.js";
 
 let appState = {
   city: "",
@@ -16,6 +16,7 @@ const locationBtn = document.getElementById("location-btn");
 
 async function updateState(city) {
   appState.city = city;
+
   try {
     const data = await getWeather(city, appState.unit);
 
@@ -25,8 +26,11 @@ async function updateState(city) {
     }
 
     appState.weather = data;
-
     localStorage.setItem("lastCity", city);
+
+    const { lat, lon } = data.coord;
+    const forecastData = await getDailyForecast(lat, lon, appState.unit);
+    renderForecast(forecastData.daily);
 
     const now = data.dt;
     const { sunrise, sunset } = data.sys;
@@ -35,7 +39,8 @@ async function updateState(city) {
     renderWeather(appState);
 
   } catch (err) {
-    renderError("Something went wrong. Please try again.");
+  console.error("UPDATE STATE ERROR:", err);
+  renderError("Something went wrong. Please try again.");
   }
 }
 

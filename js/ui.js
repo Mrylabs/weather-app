@@ -43,6 +43,55 @@ export function renderWeather(state) {
   ui.message.textContent = "";
 }
 
+let forecastChart = null;
+
+export function renderForecast(daily) {
+  if (!daily) return;
+
+  // 1. Prepare data
+  const labels = daily.map(day => {
+    const date = new Date(day.dt * 1000);
+    return date.toLocaleDateString("en-US", { weekday: "short" });
+  });
+
+  const temps = daily.map(day => Math.round(day.temp.day));
+
+  // 2. If a chart already exists, destroy it
+  if (forecastChart) {
+    forecastChart.destroy();
+  }
+
+  // 3. Get canvas
+  const ctx = document.getElementById("forecast-chart").getContext("2d");
+
+  // 4. Create chart
+  forecastChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels,
+      datasets: [
+        {
+          label: "Daily Temperature",
+          data: temps,
+          borderWidth: 2,
+          tension: 0.4, // smooth curve
+        }
+      ]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: false
+        }
+      },
+      plugins: {
+        legend: { display: false }
+      }
+    }
+  });
+}
+
+
 export function renderError(message) {
   ui.message.textContent = message;
   ui.cityName.textContent = "";
