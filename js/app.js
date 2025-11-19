@@ -8,10 +8,10 @@ let appState = {
   unit: "metric",
 };
 
-const searchBtn = document.getElementById("search-btn");
-const cityInput = document.getElementById("city-input");
-const unitToggle = document.getElementById("unit-toggle");
-const locationBtn = document.getElementById("location-btn");
+const searchBtn = document.querySelector(".search-btn");
+const cityInput = document.querySelector(".search-input");
+const unitToggle = document.querySelector(".unit-toggle");
+const locationBtn = document.querySelector(".get-location-btn");
 
 
 async function updateState(city) {

@@ -1,5 +1,5 @@
 const ui = {
-  cityName: document.getElementById("city-name"),
+  cityName: document.querySelector(".weather-description"),
   temperature: document.getElementById("temperature"),
   feelsLike: document.getElementById("feels-like"),
   humidity: document.getElementById("humidity"),
@@ -7,7 +7,7 @@ const ui = {
   wind: document.getElementById("wind"),
   icon: document.getElementById("weather-icon"),
   timeIcon: document.getElementById("time-icon"),
-  message: document.getElementById("message"),
+  message: document.querySelector(".error-message")
 };
 
 export function renderWeather(state) {
@@ -17,11 +17,19 @@ export function renderWeather(state) {
   const weatherMain = weather.weather[0].main.toLowerCase();
   const description = weather.weather[0].description;
 
-  document.body.style.background = state.isDay
-    ? "linear-gradient(to bottom, #87ceeb, #f0f8ff)"
-    : "linear-gradient(to bottom, #0f2027, #203a43, #2c5364)";
+  document.body.classList.remove("day-mode", "night-mode");
+  document.body.classList.add(state.isDay ? "day-mode" : "night-mode");
 
-  ui.timeIcon.textContent = state.isDay ? "☀️" : "🌙";
+  ui.timeIcon.style.opacity = 0;
+
+  setTimeout(() => {
+    ui.timeIcon.src = state.isDay
+      ? "./assets/sun.svg"
+      : "./assets/moon.svg";
+
+    ui.timeIcon.style.opacity = 1;
+  }, 200);
+
 
   let emoji = "";
   if (weatherMain.includes("clear")) emoji = state.isDay ? "☀️" : "🌙";
@@ -62,7 +70,7 @@ export function renderForecast(daily) {
   }
 
   // 3. Get canvas
-  const ctx = document.getElementById("forecast-chart").getContext("2d");
+  const ctx = document.getElementById("forecastChart").getContext("2d");
 
   // 4. Create chart
   forecastChart = new Chart(ctx, {
@@ -90,7 +98,6 @@ export function renderForecast(daily) {
     }
   });
 }
-
 
 export function renderError(message) {
   ui.message.textContent = message;
