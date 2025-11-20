@@ -108,11 +108,33 @@ body {
   border-radius: 16px;
   padding: 20px;
   box-shadow: 0 4px 18px rgba(0,0,0,0.2);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.weather-main {
+  grid-column: span 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+
+  background: rgba(255,255,255,0.2);
+  padding: 15px;
+  border-radius: 12px;
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .weather-details p {
-  margin: 8px 0;
+  margin: 0;
+  padding: 10px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+  text-align: center;
   font-size: 16px;
+  font-weight: 600;
 }
 
 #time-icon, #weather-icon {
@@ -121,16 +143,17 @@ body {
   margin: 10px 0;
 }
 
-.forecast-section {
-  margin-top: 30px;
-  width: 100%;
-  max-width: 700px;
-  padding: 20px;
+.chart-section {
+  grid-column: span 2;
+  margin-top: 15px;
+  background: rgba(255,255,255,0.18);
+  padding: 12px;
+  border-radius: 12px;
 }
 
-canvas {
+.chart-section canvas {
   width: 100% !important;
-  height: 300px !important;
+  height: 180px !important;
 }
 
 @media(max-width: 480px) {
@@ -150,4 +173,22 @@ canvas {
   .get-location-btn {
     width: 100%;
   }
+}
+
+/* UI Utility Classes */
+.fade {
+  transition: opacity 0.3s ease;
+}
+
+.fade-in {
+  opacity: 1;
+}
+
+.fade-out {
+  opacity: 0;
+}
+
+.icon-transition {
+  transition: opacity 0.3s ease;
+  opacity: 1;
 }

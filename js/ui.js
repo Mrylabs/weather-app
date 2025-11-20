@@ -20,14 +20,16 @@ export function renderWeather(state) {
   document.body.classList.remove("day-mode", "night-mode");
   document.body.classList.add(state.isDay ? "day-mode" : "night-mode");
 
-  ui.timeIcon.style.opacity = 0;
+  ui.timeIcon.classList.remove("fade-in");
+  ui.timeIcon.classList.add("fade-out");
 
   setTimeout(() => {
     ui.timeIcon.src = state.isDay
       ? "./assets/sun.svg"
       : "./assets/moon.svg";
 
-    ui.timeIcon.style.opacity = 1;
+    ui.timeIcon.classList.remove("fade-out");
+    ui.timeIcon.classList.add("fade-in");
   }, 200);
 
 
@@ -44,9 +46,9 @@ export function renderWeather(state) {
   ui.feelsLike.textContent = `Feels like: ${Math.round(weather.main.feels_like)}${unitSymbol}`;
 
   ui.cityName.textContent = weather.name;
-  ui.humidity.textContent = `Humidity: ${weather.main.humidity}%`;
+  ui.humidity.textContent = `💧 Humidity: ${weather.main.humidity}%`;
   ui.description.textContent = description;
-  ui.wind.textContent = `Wind: ${weather.wind.speed} m/s`;
+  ui.wind.textContent = `🍃 Wind: ${weather.wind.speed} m/s`;
   ui.icon.textContent = emoji;
   ui.message.textContent = "";
 }
