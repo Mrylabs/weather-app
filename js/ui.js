@@ -1,14 +1,17 @@
-const ui = {
-  cityName: document.querySelector(".weather-description"),
-  temperature: document.getElementById("temperature"),
-  feelsLike: document.getElementById("feels-like"),
-  humidity: document.getElementById("humidity"),
-  description: document.getElementById("description"),
-  wind: document.getElementById("wind"),
-  icon: document.getElementById("weather-icon"),
-  timeIcon: document.getElementById("time-icon"),
-  message: document.querySelector(".error-message")
-};
+export const ui = {};
+
+export function initUI() {
+  ui.cityName = document.querySelector(".weather-description");
+  ui.temperature = document.getElementById("temperature");
+  ui.feelsLike = document.getElementById("feels-like");
+  ui.humidity = document.getElementById("humidity");
+  ui.description = document.getElementById("description");
+  ui.wind = document.getElementById("wind");
+  ui.icon = document.getElementById("weather-icon");
+  ui.timeIcon = document.getElementById("time-icon");
+  ui.message = document.querySelector(".error-message");
+  ui.chartCanvas = document.getElementById("forecastChart");
+}
 
 export function renderWeather(state) {
   const weather = state.weather;
@@ -42,9 +45,9 @@ export function renderWeather(state) {
   else if (weatherMain.includes("mist")) emoji = "🌫️";
 
   const unitSymbol = state.unit === "metric" ? "°C" : "°F";
+
   ui.temperature.textContent = `Temperature: ${Math.round(weather.main.temp)}${unitSymbol}`;
   ui.feelsLike.textContent = `Feels like: ${Math.round(weather.main.feels_like)}${unitSymbol}`;
-
   ui.cityName.textContent = weather.name;
   ui.humidity.textContent = `💧 Humidity: ${weather.main.humidity}%`;
   ui.description.textContent = description;
@@ -55,26 +58,27 @@ export function renderWeather(state) {
 
 let forecastChart = null;
 
-export function renderForecast(daily) {
-  if (!daily) return;
+export function renderForecast(daily, unit = "metric") {
+  if (!daily || !ui.chartCanvas) return;
 
-  // 1. Prepare data
-  const labels = daily.map(day => {
-    const date = new Date(day.dt * 1000);
-    return date.toLocaleDateString("en-US", { weekday: "short" });
+  // ---- DATA ----
+  const labels = daily.map(day => 
+    new Date(day.dt * 1000).toLocaleDateString("en-US", { weekday: "short" })
+  );
+
+  const temps = daily.map(day => {
+    const c = Math.round(day.temp.day);
+    return unit === "metric" ? c : Math.round(c * 9/5 + 32);
   });
 
-  const temps = daily.map(day => Math.round(day.temp.day));
-
-  // 2. If a chart already exists, destroy it
+  // ---- DESTROY OLD CHART ----
   if (forecastChart) {
     forecastChart.destroy();
   }
 
-  // 3. Get canvas
-  const ctx = document.getElementById("forecastChart").getContext("2d");
+  const ctx = ui.chartCanvas.getContext("2d");
 
-  // 4. Create chart
+  // ---- CREATE NEW CHART ----
   forecastChart = new Chart(ctx, {
     type: "line",
     data: {
@@ -84,19 +88,13 @@ export function renderForecast(daily) {
           label: "Daily Temperature",
           data: temps,
           borderWidth: 2,
-          tension: 0.4, // smooth curve
+          tension: 0.4
         }
       ]
     },
     options: {
-      scales: {
-        y: {
-          beginAtZero: false
-        }
-      },
-      plugins: {
-        legend: { display: false }
-      }
+      scales: { y: { beginAtZero: false } },
+      plugins: { legend: { display: false } }
     }
   });
 }
@@ -110,5 +108,5 @@ export function renderError(message) {
   ui.description.textContent = "";
   ui.wind.textContent = "";
   ui.icon.textContent = "";
-  ui.timeIcon.textContent = "";
+  ui.timeIcon.src = "";
 }

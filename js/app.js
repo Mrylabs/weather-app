@@ -1,12 +1,25 @@
-import { getWeather, getWeatherByCoords, getDailyForecast } from "./api.js";
-import { renderWeather, renderError, renderForecast } from "./ui.js";
+import {
+  appState,
+  loadStateFromStorage,
+  saveCity,
+  saveUnit,
+  setWeatherData,
+  setDayMode,
+} from "./state.js";
 
-let appState = {
-  city: "",
-  weather: null,
-  isDay: true,
-  unit: "metric",
-};
+import {
+  fetchWeatherByCity,
+  fetchWeatherByCoords,
+  fetchDailyForecast
+} from "./services/weatherService.js";
+
+import {
+  renderWeather,
+  renderError,
+  renderForecast,
+  initUI
+} from "./ui.js";
+
 
 const searchBtn = document.querySelector(".search-btn");
 const cityInput = document.querySelector(".search-input");
@@ -15,26 +28,26 @@ const locationBtn = document.querySelector(".get-location-btn");
 
 
 async function updateState(city) {
-  appState.city = city;
+  appState.city = saveCity(city);
 
   try {
-    const data = await getWeather(city, appState.unit);
+    const data = await fetchWeatherByCity(city, appState.unit);
 
     if (data.cod !== 200) {
       renderError("City not found 😢");
       return;
     }
 
-    appState.weather = data;
+    appState.weather = setWeatherData(data);
     localStorage.setItem("lastCity", city);
 
     const { lat, lon } = data.coord;
-    const forecastData = await getDailyForecast(lat, lon, appState.unit);
+    const forecastData = await fetchDailyForecast(lat, lon, appState.unit);
     renderForecast(forecastData.daily);
 
     const now = data.dt;
     const { sunrise, sunset } = data.sys;
-    appState.isDay = now >= sunrise && now < sunset;
+    setDayMode(now >= sunrise && now < sunset);
 
     renderWeather(appState);
 
@@ -61,11 +74,12 @@ async function getMyLocation() {
       async (pos) => {
         try {
           const { latitude, longitude } = pos.coords;
-          const data = await getWeatherByCoords(latitude, longitude, appState.unit);
+          const data = await fetchWeatherByCoords(latitude, longitude, appState.unit);
 
           appState.city = data.name;
           appState.weather = data;
           renderWeather(appState);
+          saveCity(data.name);
 
         } catch (err) {
           console.warn("❌ Failed to fetch coords weather. Using fallback...");
@@ -83,6 +97,7 @@ async function getMyLocation() {
     updateState("Vienna");
   }
 }
+initUI();
 
 
 searchBtn.addEventListener("click", () => updateState(cityInput.value));
@@ -93,7 +108,7 @@ cityInput.addEventListener("keydown", (e) => {
 
 unitToggle.addEventListener("click", () => {
   appState.unit = appState.unit === "metric" ? "imperial" : "metric";
-  localStorage.setItem("unit", appState.unit);
+  saveUnit(appState.unit);
   updateState(appState.city);
 });
 
@@ -103,11 +118,10 @@ locationBtn.addEventListener("click", () => {
 
 
 window.addEventListener("load", () => {
-  const savedCity = localStorage.getItem("lastCity");
-  appState.unit = localStorage.getItem("unit") || "metric";
+  loadStateFromStorage();
 
-  if (savedCity) {
-    updateState(savedCity);
+  if (appState.city) {
+    updateState(appState.city);
   } else {
     getMyLocation();
   }
