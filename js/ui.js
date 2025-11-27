@@ -13,6 +13,45 @@ export function initUI() {
   ui.chartCanvas = document.getElementById("forecastChart");
 }
 
+let forecastChart = null;
+
+/* -----------------------
+      CLEAR UI
+------------------------ */
+export function clearUI() {
+  ui.cityName.textContent = "";
+  ui.temperature.textContent = "";
+  ui.feelsLike.textContent = "";
+  ui.humidity.textContent = "";
+  ui.description.textContent = "";
+  ui.wind.textContent = "";
+  ui.icon.textContent = "";
+  ui.message.textContent = "";
+
+  // Reset day/night icon
+  if (ui.timeIcon) {
+    ui.timeIcon.classList.remove("fade-in", "fade-out");
+    ui.timeIcon.src = "";
+  }
+
+  // Remove chart if exists
+  if (forecastChart) {
+    forecastChart.destroy();
+    forecastChart = null;
+  }
+}
+
+/* -----------------------
+    RENDER ERROR
+------------------------ */
+export function renderError(message) {
+  clearUI();               // wipe old UI COMPLETELY
+  ui.message.textContent = message; // show the error message
+}
+
+/* -----------------------
+    RENDER WEATHER
+------------------------ */
 export function renderWeather(state) {
   const weather = state.weather;
   if (!weather) return;
@@ -35,7 +74,6 @@ export function renderWeather(state) {
     ui.timeIcon.classList.add("fade-in");
   }, 200);
 
-
   let emoji = "";
   if (weatherMain.includes("clear")) emoji = state.isDay ? "☀️" : "🌙";
   else if (weatherMain.includes("cloud")) emoji = "☁️";
@@ -56,12 +94,12 @@ export function renderWeather(state) {
   ui.message.textContent = "";
 }
 
-let forecastChart = null;
-
+/* -----------------------
+    RENDER FORECAST
+------------------------ */
 export function renderForecast(daily, unit = "metric") {
   if (!daily || !ui.chartCanvas) return;
 
-  // ---- DATA ----
   const labels = daily.map(day => 
     new Date(day.dt * 1000).toLocaleDateString("en-US", { weekday: "short" })
   );
@@ -71,14 +109,12 @@ export function renderForecast(daily, unit = "metric") {
     return unit === "metric" ? c : Math.round(c * 9/5 + 32);
   });
 
-  // ---- DESTROY OLD CHART ----
   if (forecastChart) {
     forecastChart.destroy();
   }
 
   const ctx = ui.chartCanvas.getContext("2d");
 
-  // ---- CREATE NEW CHART ----
   forecastChart = new Chart(ctx, {
     type: "line",
     data: {
@@ -97,16 +133,4 @@ export function renderForecast(daily, unit = "metric") {
       plugins: { legend: { display: false } }
     }
   });
-}
-
-export function renderError(message) {
-  ui.message.textContent = message;
-  ui.cityName.textContent = "";
-  ui.temperature.textContent = "";
-  ui.feelsLike.textContent = "";
-  ui.humidity.textContent = "";
-  ui.description.textContent = "";
-  ui.wind.textContent = "";
-  ui.icon.textContent = "";
-  ui.timeIcon.src = "";
 }
