@@ -1,57 +1,74 @@
 export const ui = {};
 
 export function initUI() {
-  ui.cityName = document.querySelector(".weather-description");
-  ui.temperature = document.getElementById("temperature");
-  ui.feelsLike = document.getElementById("feels-like");
-  ui.humidity = document.getElementById("humidity");
-  ui.description = document.getElementById("description");
-  ui.wind = document.getElementById("wind");
-  ui.icon = document.getElementById("weather-icon");
-  ui.timeIcon = document.getElementById("time-icon");
-  ui.message = document.querySelector(".error-message");
-  ui.chartCanvas = document.getElementById("forecastChart");
+  ui.cityName     = document.querySelector(".weather-description");
+  ui.temperature  = document.getElementById("temperature");
+  ui.feelsLike    = document.getElementById("feels-like");
+  ui.humidity     = document.getElementById("humidity");
+  ui.description  = document.getElementById("description");
+  ui.wind         = document.getElementById("wind");
+  ui.icon         = document.getElementById("weather-icon");
+  ui.timeIcon     = document.getElementById("time-icon");
+  ui.message      = document.querySelector(".error-message");
+  ui.chartCanvas  = document.getElementById("forecastChart");
 }
 
 let forecastChart = null;
 
-/* -----------------------
-      CLEAR UI
------------------------- */
-export function clearUI() {
-  ui.cityName.textContent = "";
-  ui.temperature.textContent = "";
-  ui.feelsLike.textContent = "";
-  ui.humidity.textContent = "";
-  ui.description.textContent = "";
-  ui.wind.textContent = "";
-  ui.icon.textContent = "";
-  ui.message.textContent = "";
+function getWeatherEmoji(main, isDay) {
+  if (main.includes("clear")) return isDay ? "☀️" : "🌙";
+  if (main.includes("cloud")) return "☁️";
+  if (main.includes("rain")) return "🌧️";
+  if (main.includes("snow")) return "❄️";
+  if (main.includes("thunder")) return "⚡";
+  if (main.includes("mist")) return "🌫️";
+  return "";
+}
 
-  // Reset day/night icon
+
+function updateTimeIcon(isDay) {
+  if (!ui.timeIcon) return;
+
+  ui.timeIcon.classList.remove("fade-in");
+  ui.timeIcon.classList.add("fade-out");
+
+  setTimeout(() => {
+    ui.timeIcon.src = isDay ? "./assets/sun.svg" : "./assets/moon.svg";
+    ui.timeIcon.classList.remove("fade-out");
+    ui.timeIcon.classList.add("fade-in");
+  }, 200);
+}
+
+
+export function clearUI() {
+  if (!ui.cityName) return;
+
+  ui.cityName.textContent     = "";
+  ui.temperature.textContent  = "";
+  ui.feelsLike.textContent    = "";
+  ui.humidity.textContent     = "";
+  ui.description.textContent  = "";
+  ui.wind.textContent         = "";
+  ui.icon.textContent         = "";
+  ui.message.textContent      = "";
+
   if (ui.timeIcon) {
     ui.timeIcon.classList.remove("fade-in", "fade-out");
     ui.timeIcon.src = "";
   }
 
-  // Remove chart if exists
   if (forecastChart) {
     forecastChart.destroy();
     forecastChart = null;
   }
 }
 
-/* -----------------------
-    RENDER ERROR
------------------------- */
 export function renderError(message) {
-  clearUI();               // wipe old UI COMPLETELY
-  ui.message.textContent = message; // show the error message
+  clearUI();
+  ui.message.textContent = message;
 }
 
-/* -----------------------
-    RENDER WEATHER
------------------------- */
+
 export function renderWeather(state) {
   const weather = state.weather;
   if (!weather) return;
@@ -59,48 +76,30 @@ export function renderWeather(state) {
   const weatherMain = weather.weather[0].main.toLowerCase();
   const description = weather.weather[0].description;
 
-  document.body.classList.remove("day-mode", "night-mode");
-  document.body.classList.add(state.isDay ? "day-mode" : "night-mode");
 
-  ui.timeIcon.classList.remove("fade-in");
-  ui.timeIcon.classList.add("fade-out");
+  document.body.classList.toggle("day-mode", state.isDay);
+  document.body.classList.toggle("night-mode", !state.isDay);
 
-  setTimeout(() => {
-    ui.timeIcon.src = state.isDay
-      ? "./assets/sun.svg"
-      : "./assets/moon.svg";
+  updateTimeIcon(state.isDay);
 
-    ui.timeIcon.classList.remove("fade-out");
-    ui.timeIcon.classList.add("fade-in");
-  }, 200);
-
-  let emoji = "";
-  if (weatherMain.includes("clear")) emoji = state.isDay ? "☀️" : "🌙";
-  else if (weatherMain.includes("cloud")) emoji = "☁️";
-  else if (weatherMain.includes("rain")) emoji = "🌧️";
-  else if (weatherMain.includes("snow")) emoji = "❄️";
-  else if (weatherMain.includes("thunder")) emoji = "⚡";
-  else if (weatherMain.includes("mist")) emoji = "🌫️";
-
+  const emoji = getWeatherEmoji(weatherMain, state.isDay);
   const unitSymbol = state.unit === "metric" ? "°C" : "°F";
 
   ui.temperature.textContent = `Temperature: ${Math.round(weather.main.temp)}${unitSymbol}`;
-  ui.feelsLike.textContent = `Feels like: ${Math.round(weather.main.feels_like)}${unitSymbol}`;
-  ui.cityName.textContent = weather.name;
-  ui.humidity.textContent = `💧 Humidity: ${weather.main.humidity}%`;
+  ui.feelsLike.textContent   = `Feels like: ${Math.round(weather.main.feels_like)}${unitSymbol}`;
+  ui.cityName.textContent    = weather.name;
+  ui.humidity.textContent    = `💧 Humidity: ${weather.main.humidity}%`;
   ui.description.textContent = description;
-  ui.wind.textContent = `🍃 Wind: ${weather.wind.speed} m/s`;
-  ui.icon.textContent = emoji;
-  ui.message.textContent = "";
+  ui.wind.textContent        = `🍃 Wind: ${weather.wind.speed} m/s`;
+  ui.icon.textContent        = emoji;
+  ui.message.textContent     = "";
 }
 
-/* -----------------------
-    RENDER FORECAST
------------------------- */
+
 export function renderForecast(daily, unit = "metric") {
   if (!daily || !ui.chartCanvas) return;
 
-  const labels = daily.map(day => 
+  const labels = daily.map(day =>
     new Date(day.dt * 1000).toLocaleDateString("en-US", { weekday: "short" })
   );
 
@@ -109,9 +108,7 @@ export function renderForecast(daily, unit = "metric") {
     return unit === "metric" ? c : Math.round(c * 9/5 + 32);
   });
 
-  if (forecastChart) {
-    forecastChart.destroy();
-  }
+  if (forecastChart) forecastChart.destroy();
 
   const ctx = ui.chartCanvas.getContext("2d");
 
