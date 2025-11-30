@@ -39,6 +39,75 @@ function updateTimeIcon(isDay) {
   }, 200);
 }
 
+function updateWeatherMood(condition, isNight) {
+  const body = document.body;
+
+  body.className = "mood-transition";
+
+  if (isNight) {
+    body.classList.add("bg-night");
+    return;
+  }
+
+  if (condition.includes("clear")) body.classList.add("bg-clear");
+  else if (condition.includes("cloud")) body.classList.add("bg-cloudy");
+  else if (condition.includes("rain")) body.classList.add("bg-rain");
+  else if (condition.includes("thunder")) body.classList.add("bg-thunder");
+  else if (condition.includes("snow")) body.classList.add("bg-snow");
+  else if (condition.includes("mist") || condition.includes("fog")) body.classList.add("bg-fog");
+  else if (condition.includes("wind")) body.classList.add("bg-windy");
+}
+
+// --- WEATHER PARTICLES ---
+let particleInterval = null;
+
+function clearParticles() {
+  const container = document.getElementById("weather-particles");
+  if (!container) return;
+
+  container.innerHTML = "";
+  if (particleInterval) {
+    clearInterval(particleInterval);
+    particleInterval = null;
+  }
+}
+
+function generateSnowParticles() {
+  const container = document.getElementById("weather-particles");
+  clearParticles();
+
+  particleInterval = setInterval(() => {
+    const snow = document.createElement("div");
+    snow.className = "snowflake";
+
+    const size = Math.random() * 8 + 4;
+    snow.style.width = `${size}px`;
+    snow.style.height = `${size}px`;
+    snow.style.left = `${Math.random() * 100}vw`;
+    snow.style.animationDuration = `${5 + Math.random() * 5}s`;
+
+    container.appendChild(snow);
+
+    setTimeout(() => snow.remove(), 12000);
+  }, 200);
+}
+
+function generateRainParticles() {
+  const container = document.getElementById("weather-particles");
+  clearParticles();
+
+  particleInterval = setInterval(() => {
+    const drop = document.createElement("div");
+    drop.className = "raindrop";
+
+    drop.style.left = `${Math.random() * 100}vw`;
+    drop.style.animationDuration = `${0.7 + Math.random() * 0.5}s`;
+
+    container.appendChild(drop);
+
+    setTimeout(() => drop.remove(), 2000);
+  }, 80);
+}
 
 export function clearUI() {
   if (!ui.cityName) return;
@@ -76,6 +145,17 @@ export function renderWeather(state) {
   const weatherMain = weather.weather[0].main.toLowerCase();
   const description = weather.weather[0].description;
 
+  updateWeatherMood(weatherMain, !state.isDay);
+  // PARTICLE LOGIC
+if (weatherMain.includes("snow")) {
+  generateSnowParticles();
+} else if (weatherMain.includes("rain")) {
+  generateRainParticles();
+} else if (weatherMain.includes("thunder")) {
+  generateRainParticles(); // thunderstorms use heavy rain look
+} else {
+  clearParticles();
+}
 
   document.body.classList.toggle("day-mode", state.isDay);
   document.body.classList.toggle("night-mode", !state.isDay);
