@@ -109,6 +109,47 @@ function generateRainParticles() {
   }, 80);
 }
 
+// CLOUD SYSTEM
+const cloudLayer = document.getElementById("cloud-layer");
+
+function createCloud(cloudType = "medium") {
+  const cloud = document.createElement("div");
+  cloud.classList.add("cloud");
+
+  // Start anywhere between 10–70% vertical height
+  cloud.style.top = Math.random() * 60 + 10 + "vh";
+
+  const speed = 50 + Math.random() * 40;
+  cloud.style.animationDuration = `${speed}s`;
+  cloud.style.transform = `scale(${0.8 + Math.random() * 0.6})`;
+
+  let puffCount =
+    cloudType === "thin"  ? 2 + Math.floor(Math.random() * 2) :
+    cloudType === "thick" ? 5 + Math.floor(Math.random() * 3) :
+                            3 + Math.floor(Math.random() * 3);
+
+  for (let i = 0; i < puffCount; i++) {
+    const puff = document.createElement("div");
+    puff.classList.add("cloud-puff");
+
+    const size = 70 + Math.random() * 120;
+    puff.style.width = `${size}px`;
+    puff.style.height = `${size * 0.65}px`;
+
+    puff.style.left = `${i * (size * 0.45)}px`;
+    puff.style.top = `${Math.random() * 25 - 12}px`;
+
+    puff.style.filter = "blur(8px)";
+    puff.style.opacity = 0.85 + Math.random() * 0.1;
+
+    cloud.appendChild(puff);
+  }
+
+  cloudLayer.appendChild(cloud);
+
+  setTimeout(() => cloud.remove(), speed * 1000);
+}
+
 export function clearUI() {
   if (!ui.cityName) return;
 
@@ -137,6 +178,48 @@ export function renderError(message) {
   ui.message.textContent = message;
 }
 
+let cloudInterval = null;
+
+function applyClouds(weatherMain, coverage) {
+  if (!cloudLayer) return;
+
+  // Clear everything first
+  cloudLayer.innerHTML = "";
+  if (cloudInterval) clearInterval(cloudInterval);
+
+  // Disable clouds for clear, haze, fog, mist
+  if (
+    weatherMain.includes("clear") ||
+    weatherMain.includes("haze") ||
+    weatherMain.includes("mist") ||
+    weatherMain.includes("fog")
+  ) return;
+
+  // Determine cloud density
+  let type = "medium";
+  let count = 2;
+
+  if (coverage < 30) {
+    type = "thin";
+    count = 1;
+  } else if (coverage < 60) {
+    type = "medium";
+    count = 2;
+  } else {
+    type = "thick";
+    count = 4;
+  }
+
+  // Create initial clouds
+  for (let i = 0; i < count; i++) {
+    createCloud(type);
+  }
+
+  // Continuous drifting clouds
+  cloudInterval = setInterval(() => {
+    createCloud(type);
+  }, 18000);
+}
 
 export function renderWeather(state) {
   const weather = state.weather;
@@ -144,6 +227,9 @@ export function renderWeather(state) {
 
   const weatherMain = weather.weather[0].main.toLowerCase();
   const description = weather.weather[0].description;
+
+  applyClouds(weatherMain, weather.clouds.all);
+
 
   updateWeatherMood(weatherMain, !state.isDay);
   // PARTICLE LOGIC
