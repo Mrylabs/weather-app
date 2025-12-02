@@ -13,6 +13,28 @@ export function initUI() {
   ui.chartCanvas  = document.getElementById("forecastChart");
 }
 
+const sunFlare = document.getElementById("sun-flare");
+
+// Create extra flare rings
+function createFlareCircles() {
+  sunFlare.innerHTML = ""; // clear old flares
+
+  for (let i = 0; i < 3; i++) {
+    const circle = document.createElement("div");
+    circle.className = "flare-circle";
+
+    const size = 120 + i * 50;
+    circle.style.width = size + "px";
+    circle.style.height = size + "px";
+
+    circle.style.top = -(size / 3) + "px";
+    circle.style.left = -(size / 3) + "px";
+
+    sunFlare.appendChild(circle);
+  }
+}
+createFlareCircles();
+
 let forecastChart = null;
 
 function getWeatherEmoji(main, isDay) {
@@ -149,6 +171,12 @@ function createCloud(cloudType = "medium") {
 
   setTimeout(() => cloud.remove(), speed * 1000);
 }
+function updateSunFlare(isDay) {
+  const flare = document.getElementById("sun-flare");
+  if (!flare) return;
+
+  flare.style.opacity = isDay ? "1" : "0";
+}
 
 export function clearUI() {
   if (!ui.cityName) return;
@@ -242,6 +270,19 @@ if (weatherMain.includes("snow")) {
 } else {
   clearParticles();
 }
+
+function updateSun(weatherMain, cloudCover) {
+  if (!sunFlare) return;
+
+  // clear sky, no clouds
+  if (weatherMain.includes("clear") && cloudCover < 20) {
+    sunFlare.style.opacity = 1;
+  } else {
+    sunFlare.style.opacity = 0;
+  }
+}
+updateSun(weatherMain, weather.clouds.all);
+
 
   document.body.classList.toggle("day-mode", state.isDay);
   document.body.classList.toggle("night-mode", !state.isDay);
