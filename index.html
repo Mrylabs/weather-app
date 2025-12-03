@@ -9,9 +9,10 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-<div id="sun-flare"></div>
+  <div id="sun-flare"></div>
   <div id="cloud-layer"></div>
   <div id="weather-particles"></div>
+
   <header class="header">
     <div class="header-left">
      <img id="time-icon" class="icon-transition" src="./assets/sun.svg" alt="day/night icon" />
@@ -23,6 +24,11 @@
       <button class="unit-toggle">°C / °F</button>
     </div>
   </header>
+
+  <section class="favorites">
+    <h3>Favorite Cities</h3>
+    <ul id="favorite-list"></ul>
+  </section>
 
   <section class="search-section">
     <button class="get-location-btn">
@@ -40,7 +46,8 @@
 <section class="weather-info">
   <p class="error-message"></p>
   <h2 class="weather-description">—</h2>
-
+  <button class="add-favorite-btn">⭐ Add to Favorites</button>
+  
   <div class="weather-details">
     <div class="weather-main">
       <span id="weather-icon"></span>

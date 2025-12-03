@@ -342,10 +342,10 @@ body {
   inset: 0;
   border-radius: 50%;
   background: radial-gradient(circle,
-    rgba(255,255,180,1) 20%,
-    rgba(255,220,80,0.9) 30%,
-    rgba(255,190,60,0.6) 40%,
-    rgba(255,180,60,0) 70%
+    rgba(255,255,180,1) 0%,
+    rgba(255,220,80,0.9) 20%,
+    rgba(255,190,60,0.6) 50%,
+    rgba(255,180,60,0) 100%
   );
   animation: sunPulse 5s infinite ease-in-out;
 }
@@ -390,4 +390,38 @@ body {
   0%, 100% { transform: scale(1) translateY(0); opacity: 0.65; }
   50% { transform: scale(1.15) translateY(-4px); opacity: 1; }
 }
+.favorites ul {
+  list-style: none;
+  padding: 0;
+}
+.favorite-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: #ffffff22;
+  border-radius: 6px;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+.favorite-item:hover {
+  background: #ffffff33;
+}
+.remove-fav {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
 
+.add-favorite-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #eee;
+  border: none;
+  font-size: 14px;
+}
+
+.add-favorite-btn.favorited {
+  background: gold;
+  font-weight: bold;
+}

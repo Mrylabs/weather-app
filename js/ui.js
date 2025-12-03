@@ -1,5 +1,7 @@
 export const ui = {};
 
+const sunFlare = document.getElementById("sun-flare");
+
 export function initUI() {
   ui.cityName     = document.querySelector(".weather-description");
   ui.temperature  = document.getElementById("temperature");
@@ -11,13 +13,14 @@ export function initUI() {
   ui.timeIcon     = document.getElementById("time-icon");
   ui.message      = document.querySelector(".error-message");
   ui.chartCanvas  = document.getElementById("forecastChart");
+  ui.favoriteList = document.getElementById("favorite-list");
+  ui.sunFlare = document.getElementById("sun-flare");
+  ui.addFavoriteBtn = document.querySelector(".add-favorite-btn");
 }
 
-const sunFlare = document.getElementById("sun-flare");
-
-// Create extra flare rings
 function createFlareCircles() {
-  sunFlare.innerHTML = ""; // clear old flares
+  if (!ui.sunFlare) return;
+  ui.sunFlare.innerHTML = "";
 
   for (let i = 0; i < 3; i++) {
     const circle = document.createElement("div");
@@ -30,9 +33,10 @@ function createFlareCircles() {
     circle.style.top = -(size / 3) + "px";
     circle.style.left = -(size / 3) + "px";
 
-    sunFlare.appendChild(circle);
+    ui.sunFlare.appendChild(circle);
   }
 }
+
 createFlareCircles();
 
 let forecastChart = null;
@@ -249,6 +253,16 @@ function applyClouds(weatherMain, coverage) {
   }, 18000);
 }
 
+export function updateFavoriteButton(isFavorite) {
+  if (!ui.addFavoriteBtn) return;
+
+  ui.addFavoriteBtn.textContent = isFavorite
+    ? "★ Favorited"
+    : "☆ Add to Favorites";
+
+  ui.addFavoriteBtn.classList.toggle("favorited", isFavorite);
+}
+
 export function renderWeather(state) {
   const weather = state.weather;
   if (!weather) return;
@@ -337,4 +351,18 @@ export function renderForecast(daily, unit = "metric") {
       plugins: { legend: { display: false } }
     }
   });
+}
+export function renderFavoriteCities(favorites) {
+  if (!ui.favoriteList) return;
+
+  ui.favoriteList.innerHTML = favorites
+    .map(
+      (city) => `
+      <li class="favorite-item" data-city="${city}">
+        <span class="favorite-name">${city}</span>
+        <button class="remove-fav" data-city="${city}">❌</button>
+      </li>
+    `
+    )
+    .join("");
 }
