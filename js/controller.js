@@ -1,17 +1,7 @@
-import {
-  appState,
-  loadStateFromStorage,
-  saveUnit,
-} from "./state.js";
-
-import {
-  renderWeather,
-  renderError,
-  renderForecast,
-  renderFavoriteCities,
-  updateFavoriteButton
-} from "./ui.js";
-
+import { appState, loadStateFromStorage, saveUnit } from "./state.js";
+import {renderError, renderForecast } from "./ui.js";
+import { updateFavoriteButton, renderFavoriteCities } from "./UI/favoritesUI.js";
+import { renderWeather } from "./UI/weatherUI.js";
 import { loadFavorites, saveFavorites } from "./services/favoriteService.js";
 import { getWeatherByCity } from "./use-cases/getWeatherByCity.js";
 import { getWeatherByLocation } from "./use-cases/getWeatherByLocation.js";

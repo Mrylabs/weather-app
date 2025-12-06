@@ -1,0 +1,18 @@
+export const elements = {
+  sunFlare: document.getElementById("sun-flare"),
+  cityName: document.querySelector(".weather-description"),
+  temperature: document.getElementById("temperature"),
+  feelsLike: document.getElementById("feels-like"),
+  humidity: document.getElementById("humidity"),
+  description: document.getElementById("description"),
+  wind: document.getElementById("wind"),
+  icon: document.getElementById("weather-icon"),
+  timeIcon: document.getElementById("time-icon"),
+  message: document.querySelector(".error-message"),
+  chartCanvas: document.getElementById("forecastChart"),
+  favoriteList: document.getElementById("favorite-list"),
+  addFavoriteBtn: document.querySelector(".add-favorite-btn"),
+  cloudLayer: document.getElementById("cloud-layer"),
+  particleLayer: document.getElementById("weather-particles"),
+  cloudLayer: document.getElementById("cloud-layer"),
+};

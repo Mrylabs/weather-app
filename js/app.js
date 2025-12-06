@@ -1,4 +1,4 @@
-import { ui, initUI } from "./ui.js";
+import { ui } from "./ui.js";
 
 import {
   handleCitySearch,
@@ -14,8 +14,8 @@ const cityInput = document.querySelector(".search-input");
 const unitToggle = document.querySelector(".unit-toggle");
 const locationBtn = document.querySelector(".get-location-btn");
 
-initUI();
 ui.addFavoriteBtn.addEventListener("click", handleAddFavorite);
+
 searchBtn.addEventListener("click", () => {
   handleCitySearch(cityInput.value.trim());
 });
@@ -25,7 +25,6 @@ cityInput.addEventListener("keydown", (e) => {
 });
 
 locationBtn.addEventListener("click", handleLocationRequest);
-
 unitToggle.addEventListener("click", handleUnitToggle);
 
 window.addEventListener("load", initControllerOnLoad);

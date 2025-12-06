@@ -231,6 +231,7 @@ body {
 .mood-transition {
   transition: background 1s ease;
 }
+
 /* PARTICLE CONTAINER */
 #weather-particles {
   position: fixed;
@@ -240,47 +241,49 @@ body {
   height: 100%;
   pointer-events: none;
   overflow: hidden;
-  z-index: 1; /* Under UI cards */
+  z-index: 50;
 }
 
-/* SNOWFLAKE STYLE */
+/* SNOWFLAKE */
 .snowflake {
   position: absolute;
   top: -10px;
   width: 8px;
   height: 8px;
-  background: white;
   border-radius: 50%;
-  opacity: 0.8;
-  animation: fall linear infinite;
+  animation: snowFall linear infinite;
 }
 
-/* Snow falling animation */
-@keyframes fall {
+@keyframes snowFall {
   to {
-    transform: translateY(110vh);
+    transform: translateY(110vh) translateX(-10px);
     opacity: 0.2;
   }
 }
 
-/* RAIN DROP STYLE */
+/* RAIN DROP */
 .raindrop {
   position: absolute;
   top: -20px;
   width: 2px;
-  height: 15px;
-  background: rgba(255,255,255,0.6);
+  height: 18px;
   border-radius: 0 0 6px 6px;
-  animation: raindropFall linear infinite;
+  animation: rainFall linear infinite;
 }
 
-/* Rain falling animation */
-@keyframes raindropFall {
+@keyframes rainFall {
   to {
     transform: translateY(120vh);
-    opacity: 0.1;
+    opacity: 0.15;
   }
 }
+
+/* LIGHTNING FLASH */
+.flash-active {
+  background: white;
+  opacity: 0.8;
+}
+
 /* CLOUD LAYER */
 #cloud-layer {
   position: fixed;
