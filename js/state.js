@@ -4,6 +4,8 @@ export const appState = {
   isDay: true,
   unit: "metric",
   favorites: [], 
+  uvIndex: null,
+  airQuality: null,
 };
 
 

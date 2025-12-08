@@ -61,6 +61,24 @@ function updateSunFlare(isDay) {
   elements.sunFlare.style.opacity = isDay ? "1" : "0";
 }
 
+export function updateUV(uv) {
+  elements.uvBox.textContent = `UV Index: ${uv}`;
+}
+
+export function updateAQI(aqi) {
+  const meaning = ["Good", "Fair", "Moderate", "Poor", "Very Poor"];
+  const label = meaning[aqi - 1];
+
+  elements.aqiBox.textContent = `Air Quality: ${label}`;
+}
+
+export const weatherUI = {
+  renderWeather,
+  updateUV,
+  updateAQI,
+};
+
+
 // Main Export: Render Current Weather
 export function renderWeather(state) {
   const weather = state.weather;
@@ -95,16 +113,17 @@ export function renderWeather(state) {
   const unitSymbol = state.unit === "metric" ? "°C" : "°F";
 
   // Fill UI (elements come from elements.js)
-  elements.temperature.textContent = `Temperature: ${Math.round(
-    weather.main.temp
-  )}${unitSymbol}`;
-  elements.feelsLike.textContent = `Feels like: ${Math.round(
-    weather.main.feels_like
-  )}${unitSymbol}`;
-  elements.cityName.textContent = weather.name || "-";
-  elements.humidity.textContent = `💧 Humidity: ${weather.main.humidity}%`;
-  elements.description.textContent = description;
-  elements.wind.textContent = `🍃 Wind: ${weather.wind.speed} m/s`;
-  elements.icon.textContent = emoji;
-  elements.message.textContent = "";
+
+  if (elements.temperature) {
+    elements.temperature.textContent = `Temperature: ${Math.round(weather.main.temp)}${unitSymbol}`;
+  }
+  if (elements.feelsLike) {
+    elements.feelsLike.textContent = `Feels like: ${Math.round(weather.main.feels_like)}${unitSymbol}`;
+  }
+  if (elements.cityName) elements.cityName.textContent = weather.name || "-";
+  if (elements.humidity) elements.humidity.textContent = `💧 Humidity: ${weather.main.humidity}%`;
+  if (elements.description) elements.description.textContent = description;
+  if (elements.wind) elements.wind.textContent = `🍃 Wind: ${weather.wind.speed} m/s`;
+  if (elements.icon) elements.icon.textContent = emoji;
+  if (elements.message) elements.message.textContent = "";
 }

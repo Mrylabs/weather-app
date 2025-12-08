@@ -36,6 +36,25 @@ export async function fetchDailyForecast(lat, lon, unit = "metric") {
   return { daily };
 }
 
+export async function getUVIndex(lat, lon) {
+  const url = `https://api.openweathermap.org/data/2.5/uvi?appid=${API_KEY}&lat=${lat}&lon=${lon}`;
+  const res = await fetch(url);
+  const data = await res.json();
+
+  return data.value;
+}
+
+
+export async function getAirQuality(lat, lon) {
+  const url = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
+
+  const res = await fetch(url);
+  const data = await res.json();
+
+  return data.list[0].main.aqi; // 1 to 5
+}
+
+
 // --- Shared reusable fetch helper ---
 async function fetchJSON(url) {
   const response = await fetch(url);

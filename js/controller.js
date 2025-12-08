@@ -1,11 +1,11 @@
 import { appState, loadStateFromStorage, saveUnit } from "./state.js";
 import {renderError, renderForecast } from "./ui.js";
 import { updateFavoriteButton, renderFavoriteCities } from "./UI/favoritesUI.js";
-import { renderWeather } from "./UI/weatherUI.js";
+import { weatherUI, renderWeather } from "./UI/weatherUI.js";
 import { loadFavorites, saveFavorites } from "./services/favoriteService.js";
 import { getWeatherByCity } from "./use-cases/getWeatherByCity.js";
 import { getWeatherByLocation } from "./use-cases/getWeatherByLocation.js";
-
+import { getUVIndex, getAirQuality } from "./services/weatherService.js";
 
 export function handleAddFavorite() {
   const city = appState.city;
@@ -68,11 +68,26 @@ export async function handleCitySearch(city) {
   }
 
   appState.city = city;
+  appState.weather = result.weather; 
+  appState.unit = appState.unit || "metric"; 
+
+  const lat = result.weather.coord.lat;
+  const lon = result.weather.coord.lon;
+
+   const [uv, aqi] = await Promise.all([
+     getUVIndex(lat, lon),
+     getAirQuality(lat, lon),
+    ]);
+
+  appState.uvIndex = uv;
+  appState.airQuality = aqi;
 
   const favorites = loadFavorites();
   updateFavoriteButton(favorites.includes(city));
 
   renderWeather(appState);
+  weatherUI.updateUV(uv);
+  weatherUI.updateAQI(aqi);
   renderForecast(result.forecast);
 }
 
@@ -95,8 +110,24 @@ export async function handleLocationRequest() {
       if (result.error) {
         return handleCitySearch("Vienna");
       }
+      appState.city = result.weather.name;
+      appState.weather = result.weather;
+
+      // UV + AQI
+      const lat = result.weather.coord.lat;
+      const lon = result.weather.coord.lon;
+
+      const [uv, aqi] = await Promise.all([
+        getUVIndex(lat, lon),
+        getAirQuality(lat, lon),
+      ]);
+
+      appState.uvIndex = uv;
+      appState.airQuality = aqi;
 
       renderWeather(appState);
+      weatherUI.updateUV(uv);
+      weatherUI.updateAQI(aqi);
     },
     () => handleCitySearch("Vienna")
   );

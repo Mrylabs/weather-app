@@ -1,3 +1,4 @@
+// /UI/elements.js
 export const elements = {
   sunFlare: document.getElementById("sun-flare"),
   cityName: document.querySelector(".weather-description"),
@@ -14,5 +15,6 @@ export const elements = {
   addFavoriteBtn: document.querySelector(".add-favorite-btn"),
   cloudLayer: document.getElementById("cloud-layer"),
   particleLayer: document.getElementById("weather-particles"),
-  cloudLayer: document.getElementById("cloud-layer"),
+  uvBox: document.getElementById("uv-index"),
+  aqiBox: document.getElementById("air-quality"),
 };

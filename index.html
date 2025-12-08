@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>weather app</title>
-  <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -44,21 +44,31 @@
   <h2 class="weather-description">—</h2>
   <button class="add-favorite-btn">⭐ Add to Favorites</button>
   
-  <div class="weather-details">
-    <div class="weather-main">
+<div class="weather-details">
+
+  <div class="weather-grid">
+
+    <div class="card-main">
       <span id="weather-icon"></span>
-      <span id="temperature">Temperature: -- °C</span>
+      <h2 id="temperature">--°C</h2>
+      <p id="description">—</p>
     </div>
 
-    <p id="feels-like"></p>
-    <p id="humidity"></p>
-    <p id="description">Description: --</p>
-    <p id="wind">Wind: -- m/s</p>
+    <div class="card-small" id="feels-like">Feels Like: --</div>
+    <div class="card-small" id="uv-index">UV Index: --</div>
+    <div class="card-small" id="air-quality">AQI: --</div>
 
-    <div class="chart-section">
-     <canvas id="forecastChart"></canvas>
+    <div class="info-row">
+      <div class="card-small" id="wind">Wind: --</div>
+      <div class="card-small" id="humidity">Humidity: --%</div>
     </div>
+
+    <div class="card-forecast">
+      <canvas id="forecastChart"></canvas>
+    </div>
+
   </div>
+</div>
 </section>
 
   <div id="weather-particles"></div>
