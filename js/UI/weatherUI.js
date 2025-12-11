@@ -100,8 +100,11 @@ export function renderWeather(state) {
 
   // Fill UI (elements come from elements.js)
 
+  if (elements.cityTitle) {
+    elements.cityTitle.textContent = weather.name || "-";
+  }
   if (elements.temperature) {
-    elements.temperature.textContent = `Temperature: ${Math.round(weather.main.temp)}${unitSymbol}`;
+    elements.temperature.textContent = `${Math.round(weather.main.temp)}${unitSymbol}`;
   }
   if (elements.feelsLike) {
     elements.feelsLike.textContent = `Feels like: ${Math.round(weather.main.feels_like)}${unitSymbol}`;

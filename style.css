@@ -209,6 +209,14 @@ body {
 .card-main #temperature { font-size: 28px; margin: 0; }
 .card-main #main-description { margin: 6px 0 0; opacity: 0.95; }
 
+.city-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 4px;
+  color: #004c6d;
+}
+
 /* Row 2 — 3 small cards (feels / UV / AQI) */
 .card-small {
   background: var(--card-bg);
