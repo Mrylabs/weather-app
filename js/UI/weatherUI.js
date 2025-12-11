@@ -13,19 +13,6 @@ function getWeatherEmoji(main, isDay) {
   return "";
 }
 
-function updateTimeIcon(isDay) {
-  if (!elements.timeIcon) return;
-
-  elements.timeIcon.classList.remove("fade-in");
-  elements.timeIcon.classList.add("fade-out");
-
-  setTimeout(() => {
-    elements.timeIcon.src = isDay ? "./assets/sun.svg" : "./assets/moon.svg";
-    elements.timeIcon.classList.remove("fade-out");
-    elements.timeIcon.classList.add("fade-in");
-  }, 200);
-}
-
 function clearMoodClasses(body) {
   // remove any bg-* classes (keeps other classes)
   const classes = Array.from(body.classList);
@@ -92,7 +79,6 @@ export function renderWeather(state) {
 
   // Day/Night visuals
   updateSunFlare(state.isDay);
-  updateTimeIcon(state.isDay);
 
   // Determine rain/snow intensity (1h then 3h)
   const rainVolume =

@@ -7,7 +7,6 @@ export const elements = {
   description: document.getElementById("description"),
   wind: document.getElementById("wind"),
   icon: document.getElementById("weather-icon"),
-  timeIcon: document.getElementById("time-icon"),
   message: document.querySelector(".error-message"),
   chartCanvas: document.getElementById("forecastChart"),
   favoriteDropdownToggle: document.querySelector(".favorite-toggle-btn"),
