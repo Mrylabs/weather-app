@@ -33,9 +33,9 @@ export function clearUI() {
 // --------------------------------------------------
 // Show an error
 // --------------------------------------------------
-export function renderError(message) {
-  clearUI();
-  ui.message.textContent = message;
+export function renderError(msg) {
+  if (!elements.message) return;   // prevent crash
+  elements.message.textContent = msg;
 }
 
 // --------------------------------------------------

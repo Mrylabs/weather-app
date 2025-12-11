@@ -44,7 +44,7 @@ export async function getUVIndex(lat, lon) {
   return data.value;
 }
 
-
+/*
 export async function getAirQuality(lat, lon) {
   const url = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
 
@@ -52,7 +52,7 @@ export async function getAirQuality(lat, lon) {
   const data = await res.json();
 
   return data.list[0].main.aqi; // 1 to 5
-}
+}*/
 
 
 // --- Shared reusable fetch helper ---

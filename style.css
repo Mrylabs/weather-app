@@ -45,6 +45,55 @@ body {
 
 #time-icon { transition: opacity 0.4s ease; }
 
+.favorite-dropdown {
+  position: relative;
+}
+
+.favorite-toggle-btn {
+  background: rgba(255,255,255,0.25);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 600;
+}
+
+.favorite-dropdown-list {
+  position: absolute;
+  top: 45px;           /* below button */
+  left: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  padding: 10px;
+  border-radius: 10px;
+  list-style: none;
+  width: 180px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 20;
+}
+
+.favorite-dropdown-list.hidden {
+  display: none;
+}
+
+.favorite-dropdown-list li {
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 4px;
+  cursor: pointer;
+}
+
+.favorite-dropdown-list .remove-fav {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: red;
+  font-size: 14px;
+}
+
 /* search & favorites */
 .search-section {
   width: 100%;
@@ -77,6 +126,38 @@ body {
 }
 .location-icon { width: 20px; height: 20px; }
 
+.search-with-fav {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.search-with-fav .search-input {
+  width: 100%;
+  padding-right: 40px; /* space for the star */
+}
+
+.search-with-fav .favorite-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  
+  background: none;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  color: #fff;  
+  -webkit-text-stroke: 1px gray;
+}
+
+.search-with-fav .favorite-btn.favorited {
+  color: gold;
+  -webkit-text-stroke: 1.2px gray;
+}
+
+
 .weather-info {
   margin-top: 25px;
   width: 100%;
@@ -90,17 +171,6 @@ body {
   margin-bottom: 12px;
   font-weight: 600;
 }
-
-.add-favorite-btn {
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  background: #eee;
-  border: none;
-  font-size: 14px;
-  margin-bottom: 12px;
-}
-.add-favorite-btn.favorited { background: gold; font-weight: bold; }
 
 /* =========================
    WEATHER GRID (MAIN)

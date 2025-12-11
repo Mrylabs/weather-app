@@ -1,4 +1,3 @@
-// /UI/elements.js
 export const elements = {
   sunFlare: document.getElementById("sun-flare"),
   cityName: document.querySelector(".weather-description"),
@@ -11,8 +10,11 @@ export const elements = {
   timeIcon: document.getElementById("time-icon"),
   message: document.querySelector(".error-message"),
   chartCanvas: document.getElementById("forecastChart"),
-  favoriteList: document.getElementById("favorite-list"),
-  addFavoriteBtn: document.querySelector(".add-favorite-btn"),
+  favoriteDropdownToggle: document.querySelector(".favorite-toggle-btn"),
+  favoriteDropdownList: document.querySelector(".favorite-dropdown-list"),
+  addFavoriteBtn: document.querySelector(".favorite-btn"),
+  searchInput: document.querySelector(".search-input"),
+  searchBtn: document.querySelector(".search-btn"),
   cloudLayer: document.getElementById("cloud-layer"),
   particleLayer: document.getElementById("weather-particles"),
   uvBox: document.getElementById("uv-index"),

@@ -12,6 +12,11 @@
   <header class="header">
     <div class="header-left">
      <img id="time-icon" class="icon-transition" src="./assets/sun.svg" alt="day/night icon" />
+     
+    <div class="favorite-dropdown">
+      <button class="favorite-toggle-btn">⭐ Favorites ▼</button>
+      <ul class="favorite-dropdown-list hidden"></ul>
+    </div>
     </div>
 
     <h1>Mry's Weather App</h1>
@@ -21,28 +26,27 @@
     </div>
   </header>
 
-  <section class="favorites">
-    <h3>Favorite Cities</h3>
-    <ul id="favorite-list"></ul>
-  </section>
-
   <section class="search-section">
     <button class="get-location-btn">
       <img src="./assets/location.svg" class="location-icon">
     </button>
 
-    <input
+  <div class="search-with-fav">
+     <input
       type="text"
       class="search-input"
       placeholder="Enter city..."/>
 
+      <button class="favorite-btn" title="Add to favorites">☆</button>
+  </div>
+  
     <button class="search-btn">Search</button>
   </section>
 
 <section class="weather-info">
   <p class="error-message"></p>
-  <h2 class="weather-description">—</h2>
-  <button class="add-favorite-btn">⭐ Add to Favorites</button>
+</section>
+
   
 <div class="weather-details">
 

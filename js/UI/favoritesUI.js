@@ -1,22 +1,16 @@
 import { elements } from "./elements.js";
 
-// Update the Add / Remove Favorite Button
 export function updateFavoriteButton(isFavorite) {
   if (!elements.addFavoriteBtn) return;
 
-  elements.addFavoriteBtn.textContent = isFavorite
-    ? "★ Favorited"
-    : "☆ Add to Favorites";
-
+  elements.addFavoriteBtn.textContent = isFavorite ? "★" : "☆";
   elements.addFavoriteBtn.classList.toggle("favorited", isFavorite);
 }
 
-
-// Render Favorite Cities List
 export function renderFavoriteCities(favorites) {
-  if (!elements.favoriteList) return;
+  if (!elements.favoriteDropdownList) return;
 
-  elements.favoriteList.innerHTML = favorites
+  elements.favoriteDropdownList.innerHTML = favorites
     .map(
       (city) => `
       <li class="favorite-item" data-city="${city}">
