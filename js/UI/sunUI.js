@@ -1,4 +1,4 @@
-import { elements } from "./elements.js";
+/*import { elements } from "./elements.js";
 
 let flareCircles = [];
 
@@ -64,4 +64,4 @@ export function applySun(isDay, weatherMain, cloudCover) {
   }
 
   updateSunIntensity(weatherMain.toLowerCase(), cloudCover);
-}
+}*/
