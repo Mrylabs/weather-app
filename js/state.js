@@ -5,7 +5,7 @@ export const appState = {
   unit: "metric",
   favorites: [], 
   uvIndex: null,
-  airQuality: null,
+  //airQuality: null,
 };
 
 

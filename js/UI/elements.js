@@ -17,6 +17,6 @@ export const elements = {
   cloudLayer: document.getElementById("cloud-layer"),
   particleLayer: document.getElementById("weather-particles"),
   uvBox: document.getElementById("uv-index"),
-  aqiBox: document.getElementById("air-quality"),
+  //aqiBox: document.getElementById("air-quality"),
   cityTitle: document.getElementById("city-title"),
 };

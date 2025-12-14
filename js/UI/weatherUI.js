@@ -52,17 +52,17 @@ export function updateUV(uv) {
   elements.uvBox.textContent = `UV Index: ${uv}`;
 }
 
-export function updateAQI(aqi) {
+/*export function updateAQI(aqi) {
   const meaning = ["Good", "Fair", "Moderate", "Poor", "Very Poor"];
   const label = meaning[aqi - 1];
 
   elements.aqiBox.textContent = `Air Quality: ${label}`;
-}
+}*/
 
 export const weatherUI = {
   renderWeather,
   updateUV,
-  updateAQI,
+  //updateAQI,
 };
 
 
