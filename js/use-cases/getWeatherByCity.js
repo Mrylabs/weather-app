@@ -1,5 +1,6 @@
 import { appState, saveCity, setWeatherData, setDayMode } from "../state.js";
-import { fetchWeatherByCity, fetchDailyForecast } from "../services/weatherService.js";
+import { fetchWeatherByCity } from "../services/weatherService.js";
+import { normalizeWeather } from "./normalizeWeather.js";
 
 export async function getWeatherByCity(city) {
   saveCity(city);
@@ -11,19 +12,14 @@ export async function getWeatherByCity(city) {
       return { error: "City not found" };
     }
 
-    setWeatherData(data);
-
-    const { lat, lon } = data.coord;
-    const forecastData = await fetchDailyForecast(lat, lon, appState.unit);
+    const normalized = normalizeWeather(data, appState.unit);
+    setWeatherData(normalized);
 
     const now = data.dt;
     const { sunrise, sunset } = data.sys;
     setDayMode(now >= sunrise && now < sunset);
 
-    return {
-      weather: data,
-      forecast: forecastData.daily
-    };
+    return {};
   } catch (err) {
     return { error: "Network error" };
   }

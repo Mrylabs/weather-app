@@ -41,7 +41,7 @@ export function renderError(msg) {
 // --------------------------------------------------
 // Render 7-day forecast chart
 // --------------------------------------------------
-export function renderForecast(daily, unit = "metric") {
+export function renderForecastChart(daily, unit = "metric") {
   if (!daily || !ui.chartCanvas) return;
 
   const labels = daily.map(day =>

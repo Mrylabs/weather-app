@@ -2,6 +2,7 @@ const API_KEY = "b2d857f1ee7b26af47c0d4d12a3b0e36";
 
 export async function fetchWeatherByCity(city, unit = "metric") {
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=${unit}`;
+  console.log("🌐 Fetching weather:", url);
   return fetchJSON(url);
 }
 
@@ -10,8 +11,9 @@ export async function fetchWeatherByCoords(lat, lon, unit = "metric") {
   return fetchJSON(url);
 }
 
-export async function fetchDailyForecast(lat, lon, unit = "metric") {
+/*export async function fetchDailyForecast(lat, lon, unit = "metric") {
   const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${unit}&appid=${API_KEY}`;
+  console.log("🌐 Weather status:", raw);
   const raw = await fetchJSON(url);
 
   // --- Group into daily averages ---
@@ -34,10 +36,11 @@ export async function fetchDailyForecast(lat, lon, unit = "metric") {
   });
 
   return { daily };
-}
+}*/
 
 export async function getUVIndex(lat, lon) {
   const url = `https://api.openweathermap.org/data/2.5/uvi?appid=${API_KEY}&lat=${lat}&lon=${lon}`;
+  console.log("🌐 Weather status:", url);
   const res = await fetch(url);
   const data = await res.json();
 
@@ -58,5 +61,10 @@ export async function getAirQuality(lat, lon) {
 // --- Shared reusable fetch helper ---
 async function fetchJSON(url) {
   const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+
   return response.json();
 }

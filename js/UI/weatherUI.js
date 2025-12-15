@@ -14,7 +14,6 @@ function getWeatherEmoji(main, isDay) {
 }
 
 function clearMoodClasses(body) {
-  // remove any bg-* classes (keeps other classes)
   const classes = Array.from(body.classList);
   classes.forEach((c) => {
     if (c.startsWith("bg-")) body.classList.remove(c);
@@ -24,7 +23,6 @@ function clearMoodClasses(body) {
 function updateWeatherMood(condition, isNight) {
   const body = document.body;
 
-  // keep other classes but ensure mood-transition exists
   body.classList.add("mood-transition");
   clearMoodClasses(body);
 
@@ -66,53 +64,39 @@ export const weatherUI = {
 };
 
 
-// Main Export: Render Current Weather
 export function renderWeather(state) {
   const weather = state.weather;
   if (!weather) return;
 
-  const weatherMain = (weather.weather[0].main || "").toLowerCase();
-  const description = weather.weather[0].description || "";
+  const {
+    city,
+    temp,
+    feelsLike,
+    humidity,
+    wind,
+    description,
+    main,
+    clouds,
+    rainVolume,
+    snowVolume,
+  } = weather;
 
-  // Background & mood
-  updateWeatherMood(weatherMain, !state.isDay);
-
-  // Day/Night visuals
+  // Visuals (purely driven by normalized data)
+  updateWeatherMood(main, !state.isDay);
   updateSunFlare(state.isDay);
 
-  // Determine rain/snow intensity (1h then 3h)
-  const rainVolume =
-    (weather.rain && (weather.rain["1h"] ?? weather.rain["3h"])) ?? 0;
-  const snowVolume =
-    (weather.snow && (weather.snow["1h"] ?? weather.snow["3h"])) ?? 0;
+  applyParticles(main, rainVolume, snowVolume, state.isDay);
+  applyClouds(main, clouds, state.isDay);
 
-  // Weather particles module (now receives intensity + day flag)
-  applyParticles(weatherMain, rainVolume, snowVolume, state.isDay);
-
-  // Weather clouds module (now receives day flag)
-  applyClouds(weatherMain, weather.clouds?.all ?? 0, state.isDay);
-
-  // Emoji
-  const emoji = getWeatherEmoji(weatherMain, state.isDay);
-
-  // Units
+  const emoji = getWeatherEmoji(main, state.isDay);
   const unitSymbol = state.unit === "metric" ? "°C" : "°F";
 
-  // Fill UI (elements come from elements.js)
-
-  if (elements.cityTitle) {
-    elements.cityTitle.textContent = weather.name || "-";
-  }
-  if (elements.temperature) {
-    elements.temperature.textContent = `${Math.round(weather.main.temp)}${unitSymbol}`;
-  }
-  if (elements.feelsLike) {
-    elements.feelsLike.textContent = `Feels like: ${Math.round(weather.main.feels_like)}${unitSymbol}`;
-  }
-  if (elements.cityName) elements.cityName.textContent = weather.name || "-";
-  if (elements.humidity) elements.humidity.textContent = `💧 Humidity: ${weather.main.humidity}%`;
-  if (elements.description) elements.description.textContent = description;
-  if (elements.wind) elements.wind.textContent = `🍃 Wind: ${weather.wind.speed} m/s`;
-  if (elements.icon) elements.icon.textContent = emoji;
-  if (elements.message) elements.message.textContent = "";
+  // Text UI
+  elements.cityTitle.textContent = city;
+  elements.temperature.textContent = `${temp}${unitSymbol}`;
+  elements.feelsLike.textContent = `Feels like: ${feelsLike}${unitSymbol}`;
+  elements.humidity.textContent = `💧 Humidity: ${humidity}%`;
+  elements.wind.textContent = `🍃 Wind: ${wind} m/s`;
+  elements.description.textContent = description;
+  elements.icon.textContent = emoji;
 }

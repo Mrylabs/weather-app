@@ -1,6 +1,6 @@
 import { elements } from "./UI/elements.js";
 import { appState, loadStateFromStorage, saveUnit } from "./state.js";
-import { renderError, renderForecast } from "./ui.js";
+import { renderError } from "./ui.js";
 import { updateFavoriteButton, renderFavoriteCities } from "./UI/favoritesUI.js";
 import { weatherUI, renderWeather } from "./UI/weatherUI.js";
 import { loadFavorites, saveFavorites } from "./services/favoriteService.js";
@@ -67,13 +67,10 @@ export async function handleCitySearch(city) {
     return;
   }
 
-  appState.city = city;
-  appState.weather = result.weather;
-  appState.unit = appState.unit || "metric";
+  const weather = appState.weather;
+   if (!weather) return;
 
-  const lat = result.weather.coord.lat;
-  const lon = result.weather.coord.lon;
-
+  const { lat, lon } = weather;
   const uv = await getUVIndex(lat, lon);
   appState.uvIndex = uv;
 
@@ -82,9 +79,9 @@ export async function handleCitySearch(city) {
 
   renderWeather(appState);
   weatherUI.updateUV(uv);
-  renderForecast(result.forecast);
 }
 
+console.log("WEATHER STATE:", appState.weather);
 
 export async function handleLocationRequest() {
   if (!navigator.geolocation) {
@@ -93,18 +90,17 @@ export async function handleLocationRequest() {
 
   navigator.geolocation.getCurrentPosition(
     async (pos) => {
-      const { latitude, longitude } = pos.coords;
-      const result = await getWeatherByLocation(latitude, longitude);
+      const result = await getWeatherByLocation(
+        pos.coords.latitude,
+        pos.coords.longitude
+      );
 
       if (result.error) return handleCitySearch("Vienna");
 
       appState.city = result.weather.name;
-      appState.weather = result.weather;
-
-      const lat = result.weather.coord.lat;
-      const lon = result.weather.coord.lon;
+      
+      const weather = appState.weather;
       const uv = await getUVIndex(lat, lon);
-
       appState.uvIndex = uv;
 
       renderWeather(appState);
