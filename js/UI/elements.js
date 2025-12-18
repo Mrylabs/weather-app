@@ -1,6 +1,6 @@
 export const elements = {
-  sunFlare: document.getElementById("sun-flare"),
-  cityName: document.querySelector(".weather-description"),
+  //sunFlare: document.getElementById("sun-flare"),
+  cityTitle: document.querySelector(".weather-description"),
   temperature: document.getElementById("temperature"),
   feelsLike: document.getElementById("feels-like"),
   humidity: document.getElementById("humidity"),

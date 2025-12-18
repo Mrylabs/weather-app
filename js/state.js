@@ -43,9 +43,11 @@ export function saveUnit(unit) {
   localStorage.setItem("unit", unit);
 }
 
-export function setWeatherData(weather) {
-  appState.weather = weather;
-  return weather;
+export function setWeatherData(partial) {
+  appState.weather = {
+    ...appState.weather,
+    ...partial
+  };
 }
 
 export function setDayMode(isDay) {

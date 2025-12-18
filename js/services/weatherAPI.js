@@ -38,10 +38,11 @@ export async function fetchWeatherByCoords(lat, lon, unit = "metric") {
   return { daily };
 }*/
 
-export async function getUVIndex(lat, lon) {
+export async function fetchUVIndex(lat, lon) {
   const url = `https://api.openweathermap.org/data/2.5/uvi?appid=${API_KEY}&lat=${lat}&lon=${lon}`;
   console.log("🌐 Weather status:", url);
   const res = await fetch(url);
+  if (!res.ok) throw new Error("UV fetch failed");
   const data = await res.json();
 
   return data.value;

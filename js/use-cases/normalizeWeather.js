@@ -1,4 +1,10 @@
 export function normalizeWeather(apiData, unit = "metric") {
+  const dt = apiData.dt;
+  const sunrise = apiData.sys.sunrise;
+  const sunset = apiData.sys.sunset;
+
+  const isDay = dt >= sunrise && dt < sunset;
+
   return {
     city: apiData.name,
 
@@ -14,7 +20,7 @@ export function normalizeWeather(apiData, unit = "metric") {
     humidity: apiData.main.humidity,
     wind: apiData.wind.speed,
     description: apiData.weather[0]?.description ?? "",
-    main: apiData.weather[0]?.main?.toLowerCase() ?? "",
+    main: apiData.weather?.[0]?.main?.toLowerCase() ?? "clear",
 
     // visuals helpers
     clouds: apiData.clouds?.all ?? 0,
@@ -27,11 +33,7 @@ export function normalizeWeather(apiData, unit = "metric") {
       apiData.snow?.["3h"] ??
       0,
 
-    // time
-    dt: apiData.dt,
-    sunrise: apiData.sys.sunrise,
-    sunset: apiData.sys.sunset,
-
-    unit
+    // derived state
+    isDay,
   };
 }

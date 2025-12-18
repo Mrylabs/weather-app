@@ -56,9 +56,10 @@ function createCloud(cloudType = "medium", isDay = true) {
   setTimeout(() => cloud.remove(), speed * 1000);
 }
 
-export function applyClouds(weatherMain, coverage, isDay = true) {
+export function applyClouds(weatherMain, coverage = 0, isDay = true) {
   const cloudLayer = elements.cloudLayer;
-  if (!cloudLayer) return;
+  if (!cloudLayer || !weatherMain) return;
+
 
   cloudLayer.innerHTML = "";
   if (cloudInterval) clearInterval(cloudInterval);

@@ -1,15 +1,27 @@
-import { appState, saveCity, setWeatherData } from "../state.js";
-import { fetchWeatherByCoords } from "../services/weatherService.js";
+import { appState, saveCity, setWeatherData, setDayMode } from "../state.js";
+import { fetchWeatherByCoords, fetchUVIndex } from "../services/weatherAPI.js";
+import { normalizeWeather } from "./normalizeWeather.js";
 
 export async function getWeatherByLocation(lat, lon) {
   try {
     const data = await fetchWeatherByCoords(lat, lon, appState.unit);
 
-    setWeatherData(data);
-    saveCity(data.name);
+    if (data.cod !== 200) {
+      return { error: "Location not found" };
+    }
 
-    return { weather: data };
+    const normalized = normalizeWeather(data, appState.unit);
+    setWeatherData(normalized);
+    saveCity(normalized.city);
+
+    const uv = await fetchUVIndex(normalized.lat, normalized.lon);
+    setWeatherData({ uvIndex: uv });
+
+    setDayMode(normalized.isDay);
+
+    return { weather: normalized };
   } catch (err) {
+    console.error("getWeatherByLocation failed:", err);
     return { error: "Failed to fetch coordinates weather" };
   }
 }

@@ -1,4 +1,3 @@
-import { ui } from "./ui.js";
 import { elements } from "./UI/elements.js";
 import {
   handleCitySearch,

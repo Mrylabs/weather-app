@@ -1,13 +1,10 @@
 import { elements } from "./UI/elements.js";
 import { appState, loadStateFromStorage, saveUnit } from "./state.js";
-import { renderError } from "./ui.js";
 import { updateFavoriteButton, renderFavoriteCities } from "./UI/favoritesUI.js";
-import { weatherUI, renderWeather } from "./UI/weatherUI.js";
+import { renderWeather } from "./UI/weatherUI.js";
 import { loadFavorites, saveFavorites } from "./services/favoriteService.js";
 import { getWeatherByCity } from "./use-cases/getWeatherByCity.js";
 import { getWeatherByLocation } from "./use-cases/getWeatherByLocation.js";
-import { getUVIndex } from "./services/weatherService.js";
-
 
 export function handleAddFavorite() {
   const city = appState.city;
@@ -37,13 +34,12 @@ export function setupFavoriteListeners() {
       let favorites = loadFavorites().filter(c => c !== city);
       saveFavorites(favorites);
       renderFavoriteCities(favorites);
-      return; 
+      return;
     }
 
     const li = e.target.closest(".favorite-item");
     if (li) {
-      const selectedCity = li.dataset.city;
-      handleCitySearch(selectedCity);
+      handleCitySearch(li.dataset.city);
       elements.favoriteDropdownList.classList.add("hidden");
     }
   });
@@ -62,26 +58,16 @@ export async function handleCitySearch(city) {
   }
 
   const result = await getWeatherByCity(city);
-  if (result.error) {
+  if (result?.error) {
     renderError(result.error);
     return;
   }
-
-  const weather = appState.weather;
-   if (!weather) return;
-
-  const { lat, lon } = weather;
-  const uv = await getUVIndex(lat, lon);
-  appState.uvIndex = uv;
 
   const favorites = loadFavorites();
   updateFavoriteButton(favorites.includes(city));
 
   renderWeather(appState);
-  weatherUI.updateUV(uv);
 }
-
-console.log("WEATHER STATE:", appState.weather);
 
 export async function handleLocationRequest() {
   if (!navigator.geolocation) {
@@ -89,22 +75,18 @@ export async function handleLocationRequest() {
   }
 
   navigator.geolocation.getCurrentPosition(
-    async (pos) => {
+    async ({ coords }) => {
       const result = await getWeatherByLocation(
-        pos.coords.latitude,
-        pos.coords.longitude
+        coords.latitude,
+        coords.longitude
       );
 
-      if (result.error) return handleCitySearch("Vienna");
-
-      appState.city = result.weather.name;
-      
-      const weather = appState.weather;
-      const uv = await getUVIndex(lat, lon);
-      appState.uvIndex = uv;
-
+      if (result?.error) {
+        handleCitySearch("Vienna");
+        return;
+      }
+      console.log("🧠 STATE AFTER FETCH:", appState.weather);
       renderWeather(appState);
-      weatherUI.updateUV(uv);
     },
     () => handleCitySearch("Vienna")
   );
