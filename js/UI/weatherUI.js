@@ -14,11 +14,6 @@ export function clearWeatherUI() {
   elements.wind.textContent         = "";
   elements.icon.textContent         = "";
   elements.message.textContent      = "";
-
-  if (elements.timeIcon) {
-    elements.timeIcon.src = "";
-    elements.timeIcon.classList.remove("fade-in", "fade-out");
-  }
 }
 
 function getWeatherEmoji(main, isDay) {
@@ -58,11 +53,6 @@ function updateWeatherMood(condition, isNight) {
     body.classList.add("bg-fog");
   else if (condition.includes("wind")) body.classList.add("bg-windy");
 }
-/*
-function updateSunFlare(isDay) {
-  if (!elements.sunFlare) return;
-  elements.sunFlare.style.opacity = isDay ? "1" : "0";
-}*/
 
 export function updateUV(uv) {
   elements.uvBox.textContent = `UV Index: ${uv}`;
@@ -87,6 +77,11 @@ export function renderWeather(state) {
   const weather = state.weather;
   if (!weather) return;
 
+  const { main } = weather;
+  if (!main) return;
+
+  const condition = main.toLowerCase();
+
   const {
     city,
     temp,
@@ -94,13 +89,11 @@ export function renderWeather(state) {
     humidity,
     wind,
     description,
-    main,
     clouds,
     rainVolume,
     snowVolume,
   } = weather;
 
-  const condition = main?.toLowerCase() ?? "clear";
 
   applyParticles(condition, rainVolume ?? 0, snowVolume ?? 0, state.isDay);
   applyClouds(condition, clouds ?? 0, state.isDay);

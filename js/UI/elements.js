@@ -1,6 +1,5 @@
 export const elements = {
-  //sunFlare: document.getElementById("sun-flare"),
-  cityTitle: document.querySelector(".weather-description"),
+  cityTitle: document.getElementById("city-title"),
   temperature: document.getElementById("temperature"),
   feelsLike: document.getElementById("feels-like"),
   humidity: document.getElementById("humidity"),
@@ -18,5 +17,4 @@ export const elements = {
   particleLayer: document.getElementById("weather-particles"),
   uvBox: document.getElementById("uv-index"),
   //aqiBox: document.getElementById("air-quality"),
-  cityTitle: document.getElementById("city-title"),
 };
