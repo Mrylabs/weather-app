@@ -1,9 +1,9 @@
-import { appState, saveCity, setWeatherData, setDayMode } from "../state.js";
+import { appState, setCity, setWeatherData, setDayMode } from "../state.js";
 import { fetchWeatherByCity, fetchUVIndex } from "../services/weatherAPI.js";
 import { normalizeWeather } from "./normalizeWeather.js";
 
 export async function getWeatherByCity(city) {
-  saveCity(city);
+  setCity(city);
 
   try {
     const data = await fetchWeatherByCity(city, appState.unit);
@@ -13,9 +13,14 @@ export async function getWeatherByCity(city) {
     }
 
     const normalized = normalizeWeather(data, appState.unit);
+
+    // 1️⃣ set full weather snapshot
     setWeatherData(normalized);
+
+    // 2️⃣ day/night comes FROM normalized data
     setDayMode(normalized.isDay);
 
+    // 3️⃣ enrich weather with UV (same state object)
     const uv = await fetchUVIndex(normalized.lat, normalized.lon);
     setWeatherData({ uvIndex: uv });
 

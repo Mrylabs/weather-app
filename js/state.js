@@ -1,52 +1,37 @@
 export const appState = {
   city: "",
   weather: {
-    temp: null,
-    feelsLike: null,
-    humidity: null,
-    wind: null,
-    description: "",
-    unit: "metric",
-  },
+  city: null,
+  lat: null,
+  lon: null,
+  temp: null,
+  feelsLike: null,
+  humidity: null,
+  wind: null,
+  description: "",
+  main: "",
+  clouds: 0,
+  rainVolume: 0,
+  snowVolume: 0,
+  uvIndex: null},
   isDay: true,
   unit: "metric",
   favorites: [],
-  uvIndex: null,
 };
 
 
-export function loadStateFromStorage() {
-  const savedCity = localStorage.getItem("lastCity");
-  const savedUnit = localStorage.getItem("unit");
-  const savedFavorites = localStorage.getItem("favorites");
-
-  if (savedCity) appState.city = savedCity;
-  if (savedUnit) appState.unit = savedUnit;
-
-  if (savedFavorites) {
-    try {
-      appState.favorites = JSON.parse(savedFavorites);
-    } catch {
-      appState.favorites = [];
-    }
-  }
-}
-
-
-export function saveCity(city) {
+export function setCity(city) {
   appState.city = city;
-  localStorage.setItem("lastCity", city);
 }
 
-export function saveUnit(unit) {
+export function setUnit(unit) {
   appState.unit = unit;
-  localStorage.setItem("unit", unit);
 }
 
 export function setWeatherData(partial) {
   appState.weather = {
     ...appState.weather,
-    ...partial
+    ...partial,
   };
 }
 
@@ -54,22 +39,6 @@ export function setDayMode(isDay) {
   appState.isDay = isDay;
 }
 
-export function saveFavorites() {
-  localStorage.setItem("favorites", JSON.stringify(appState.favorites));
-}
-
-export function addFavorite(city) {
-  if (!appState.favorites.includes(city)) {
-    appState.favorites.push(city);
-    saveFavorites();
-  }
-}
-
-export function removeFavorite(city) {
-  appState.favorites = appState.favorites.filter(c => c !== city);
-  saveFavorites();
-}
-
-export function isFavorite(city) {
-  return appState.favorites.includes(city);
+export function setFavorites(favorites) {
+  appState.favorites = favorites;
 }

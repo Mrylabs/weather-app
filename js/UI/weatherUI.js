@@ -16,13 +16,15 @@ export function clearWeatherUI() {
   elements.message.textContent      = "";
 }
 
-function getWeatherEmoji(main, isDay) {
-  if (main.includes("clear")) return isDay ? "☀️" : "🌙";
-  if (main.includes("cloud")) return "☁️";
-  if (main.includes("rain")) return "🌧️";
-  if (main.includes("snow")) return "❄️";
-  if (main.includes("thunder")) return "⚡";
-  if (main.includes("mist")) return "🌫️";
+function getWeatherEmoji(condition, isDay) {
+  if (!condition) return "";
+
+  if (condition.includes("clear")) return isDay ? "☀️" : "🌙";
+  if (condition.includes("cloud")) return "☁️";
+  if (condition.includes("rain")) return "🌧️";
+  if (condition.includes("snow")) return "❄️";
+  if (condition.includes("thunder")) return "⚡";
+  if (condition.includes("mist")) return "🌫️";
   return "";
 }
 
@@ -55,8 +57,10 @@ function updateWeatherMood(condition, isNight) {
 }
 
 export function updateUV(uv) {
+  if (uv == null) return;
   elements.uvBox.textContent = `UV Index: ${uv}`;
 }
+
 
 /*export function updateAQI(aqi) {
   const meaning = ["Good", "Fair", "Moderate", "Poor", "Very Poor"];
@@ -65,22 +69,11 @@ export function updateUV(uv) {
   elements.aqiBox.textContent = `Air Quality: ${label}`;
 }*/
 
-
-
 export function renderWeather(state) {
-  console.log("🧠 UI weather:", state.weather);
-
-  console.log("🧠 weather object:", state.weather);
-
-  console.log("🎨 renderWeather called");
+  console.log("🧠 FULL STATE:", JSON.stringify(state, null, 2));
 
   const weather = state.weather;
   if (!weather) return;
-
-  const { main } = weather;
-  if (!main) return;
-
-  const condition = main.toLowerCase();
 
   const {
     city,
@@ -89,26 +82,35 @@ export function renderWeather(state) {
     humidity,
     wind,
     description,
+    main,
     clouds,
     rainVolume,
     snowVolume,
+    uvIndex,
   } = weather;
 
+  if (!main) return;
+
+  const condition = main.toLowerCase();
 
   applyParticles(condition, rainVolume ?? 0, snowVolume ?? 0, state.isDay);
   applyClouds(condition, clouds ?? 0, state.isDay);
   updateWeatherMood(condition, !state.isDay);
 
-  elements.cityTitle.textContent = city;
+  elements.cityTitle.textContent = city ?? "";
   elements.temperature.textContent = `${temp}${state.unit === "metric" ? "°C" : "°F"}`;
   elements.feelsLike.textContent = `Feels like: ${feelsLike}`;
   elements.humidity.textContent = `💧 Humidity: ${humidity}%`;
   elements.wind.textContent = `🍃 Wind: ${wind} m/s`;
-  elements.description.textContent = description;
+  elements.description.textContent = description ?? "";
   elements.icon.textContent = getWeatherEmoji(condition, state.isDay);
+
+  if (uvIndex !== null && uvIndex !== undefined) {
+    updateUV(uvIndex);
+  }
 }
 
 export function renderError(msg) {
-  if (!elements.message) return;   // prevent crash
+  if (!elements.message) return;
   elements.message.textContent = msg;
 }
