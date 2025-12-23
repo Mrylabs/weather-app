@@ -32,24 +32,29 @@ Everything in the codebase exists to protect these rules.
 
 ```
 js/
-├─ services/        # API calls only (no state, no UI)
-│  └─ weatherService.js
+├─ services/                 # API calls only (no state, no UI)
+│  └─ weatherAPI.js
 │
-├─ use-cases/       # Application logic & state updates
+├─ use-cases/                # Application logic & state updates
 │  ├─ getWeatherByCity.js
 │  ├─ getWeatherByLocation.js
-│  └─ normalizeWeather.js
+│  ├─ normalizeWeather.js
+│  └─ favorites/
+│     ├─ favorites.js
+│     └─ storage.js
 │
-├─ UI/              # Pure rendering (no fetch, no state mutation)
+├─ UI/                       # Pure rendering (no fetch, no state mutation)
 │  ├─ weatherUI.js
 │  ├─ cloudsUI.js
 │  ├─ particlesUI.js
+│  ├─ chartUI.js
 │  ├─ favoritesUI.js
+│  ├─ favoritesDropdown.js
 │  └─ elements.js
 │
-├─ controller.js    # Event handling & orchestration
-├─ state.js         # Single source of truth
-└─ app.js           # App bootstrap
+├─ controller.js             # Event handling & orchestration
+├─ state.js                  # Single source of truth
+└─ app.js                    # App bootstrap
 ```
 
 ---
@@ -80,13 +85,14 @@ UI Render (from state only)
 
 ## 🧩 Services Layer (API Only)
 
-**Location:** `services/weatherService.js`
+**Location:** `services/weatherAPI.js`
 
 Responsibilities:
 
 * Fetch weather by city
 * Fetch weather by coordinates
 * Fetch UV index
+* fetch forcast & air quality
 
 Rules:
 
@@ -104,7 +110,7 @@ Services return **raw API responses only**.
 
 Purpose:
 
-* Convert OpenWeather API data into a stable internal model
+* Convert OpenWeather API data into a stable internal domain model
 
 Example internal model:
 
@@ -122,10 +128,8 @@ Example internal model:
   clouds,
   rainVolume,
   snowVolume,
-  sunrise,
-  sunset,
   isDay,
-  unit
+  uvIndex
 }
 ```
 
@@ -134,7 +138,7 @@ Benefits:
 * UI stability even if API changes
 * Easier debugging
 * Predictable rendering
-* React‑ready data shape
+* Seamless React migration
 
 ---
 
@@ -142,8 +146,8 @@ Benefits:
 
 **Location:** `state.js`
 
-* Holds only **normalized domain data**
 * Single source of truth
+* Holds only **normalized domain data**
 * Weather updates are **merged**, not overwritten
 
 State owns:
@@ -157,6 +161,44 @@ State owns:
 
 ---
 
+## ⭐ Favorites Architecture
+
+Favorites logic follows Clean Architecture principles:
+
+* UI triggers intent
+* Controller delegates to use-cases
+* State owns the favorites list
+* Storage sync is centralized
+
+This prevents:
+
+* UI-driven state mutations
+* Duplicate storage logic
+* Hidden side effects
+* Tight coupling between UI and persistence
+
+---
+
+## 📊 Chart UI Layer
+
+**Location:** `UI/chartUI.js`
+
+Responsibilities:
+
+* Render forecast charts (temperature, precipitation, etc.)
+* Consume only normalized state data
+* Remain stateless and deterministic
+
+Rules:
+
+* ❌ No fetch calls
+* ❌ No state mutation
+* ❌ No business logic
+
+Charts are treated as pure visual output, making them easy to replace or migrate to React chart libraries later.
+
+---
+
 ## 🎨 UI Layer (Pure Rendering)
 
 **Location:** `UI/`
@@ -164,9 +206,11 @@ State owns:
 Responsibilities:
 
 * Render weather from state
-* Apply backgrounds & mood
+* Apply backgrounds & day/night mood
 * Render particles & clouds
 * Display UV index
+* Render favorites dropdown
+* Render forecast charts
 
 Rules:
 
@@ -184,7 +228,7 @@ UI functions are **deterministic** — same state in, same UI out.
 
 Responsibilities:
 
-* Handle user events (search, location, favorites)
+* Handle user events (search, location,unit toggle, favorites)
 * Call use‑cases
 * Handle errors
 * Trigger UI rendering
@@ -203,6 +247,7 @@ Controller does **not**:
 * State setters must **merge**, not replace
 * Every entry point must normalize data
 * Removing legacy files is sometimes the real fix
+* UI errors often reveal architectural issues upstream
 
 ---
 
@@ -213,19 +258,21 @@ This project demonstrates:
 * Real‑world frontend architecture
 * Clean separation of concerns
 * Production‑grade debugging skills
+* Thoughtful state management
 * A clear migration path to React
 
-It is intentionally **not tutorial‑style code**.
+This is **not tutorial‑style code**. it reflects how scalable frontend systems are built.
 
 ---
 
 ## 🔮 Next Steps
 
 * Re‑introduce 7‑day forecast with clean normalization
-* Add charts via dedicated UI module
+* Visualize forecast using chartUI.js
+* Re‑introduce Air Quality Index (AQI) with proper normalization
 * Deploy with Vercel
-* Migrate architecture directly to React
+* Migrate architecture directly to React without redesign
 
 ---
 
-Built with care to understand **how frontend apps actually work**.
+Built with care to understand **how frontend apps actually work** not just how to make them render.
