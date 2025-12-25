@@ -48,16 +48,12 @@ export async function fetchUVIndex(lat, lon) {
   return data.value;
 }
 
-/*
-export async function getAirQuality(lat, lon) {
-  const url = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
+export async function fetchAirQuality(lat, lon) {
+  const url = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
+  console.log("🌫️ Fetching AQI:", url);
 
-  const res = await fetch(url);
-  const data = await res.json();
-
-  return data.list[0].main.aqi; // 1 to 5
-}*/
-
+  return fetchJSON(url);
+}
 
 // --- Shared reusable fetch helper ---
 async function fetchJSON(url) {

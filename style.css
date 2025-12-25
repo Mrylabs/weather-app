@@ -253,9 +253,16 @@ body {
 }
 
 /* small helper for text inside cards */
-.card-small .label,
+.card-small .label {
+  font-size: 17px;
+  opacity: 0.85;
+  margin-right: 0.2rem;
+}
+.card-small .value {
+  font-size: 16px;
+  font-weight: 600;
+}
 .card-main .label { display:block; font-size: 13px; color: rgba(255,255,255,0.85); }
-.card-small .value,
 .card-main .value { font-size: 18px; margin-top:6px; }
 
 /* chart */
@@ -358,62 +365,6 @@ body {
   from { transform: translateX(-300px); }
   to   { transform: translateX(120vw); }
 }
-
-/* === SUN LENS FLARE === 
-#sun-flare {
-  position: fixed;  
-  top: 5vh;
-  left: 10vw;
-
-  width: 160px;
-  height: 160px;
-
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.8s ease-in-out;
-
-  z-index: -10;    
-}
-
-/* Sun core disc 
-#sun-flare::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(255,255,180,1) 0%,
-    rgba(255,220,80,0.9) 20%,
-    rgba(255,190,60,0.6) 50%,
-    rgba(255,180,60,0) 100%
-  );
-  animation: sunPulse 5s infinite ease-in-out;
-  
-}
-
-/* Extra flare circles 
-#sun-flare .flare-circle {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle,
-    rgba(255,255,255,0.7),
-    rgba(255,220,120,0.3),
-    rgba(255,200,100,0)
-  );
-  animation: flareShimmer 6s infinite ease-in-out;
-}
-
-/* Mobile: prevent sun overlap with UI 
-@media (max-width: 600px) {
-  #sun-flare {
-    top: 4vh;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 110px;
-    height: 110px;
-  }
-}*/
 
 /* =========================
    BACKGROUNDS / MOODS (preserved)

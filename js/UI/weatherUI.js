@@ -58,16 +58,18 @@ function updateWeatherMood(condition, isNight) {
 
 export function updateUV(uv) {
   if (uv == null) return;
-  elements.uvBox.textContent = `UV Index: ${uv}`;
+  elements.uvBox.textContent = `UV: ${uv}`;
 }
 
+export function updateAQI(airQuality) {
+  if (!airQuality || !elements.aqiBox) return;
 
-/*export function updateAQI(aqi) {
-  const meaning = ["Good", "Fair", "Moderate", "Poor", "Very Poor"];
-  const label = meaning[aqi - 1];
+  elements.aqiBox.innerHTML = `
+    <span class="label">AQI: </span>
+    <span class="value">${airQuality.level}</span>
+  `;
+}
 
-  elements.aqiBox.textContent = `Air Quality: ${label}`;
-}*/
 
 export function renderWeather(state) {
   console.log("🧠 FULL STATE:", JSON.stringify(state, null, 2));
@@ -87,6 +89,7 @@ export function renderWeather(state) {
     rainVolume,
     snowVolume,
     uvIndex,
+    airQuality, 
   } = weather;
 
   if (!main) return;
@@ -108,6 +111,9 @@ export function renderWeather(state) {
   if (uvIndex !== null && uvIndex !== undefined) {
     updateUV(uvIndex);
   }
+  if (airQuality) {
+  updateAQI(airQuality);
+}
 }
 
 export function renderError(msg) {

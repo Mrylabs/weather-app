@@ -1,6 +1,11 @@
 import { appState, setCity, setWeatherData, setDayMode } from "../state.js";
-import { fetchWeatherByCity, fetchUVIndex } from "../services/weatherAPI.js";
+import {
+  fetchWeatherByCity,
+  fetchUVIndex,
+  fetchAirQuality,
+} from "../services/weatherAPI.js";
 import { normalizeWeather } from "./normalizeWeather.js";
+import { normalizeAirQuality } from "./normalizeAirQuality.js";
 
 export async function getWeatherByCity(city) {
   setCity(city);
@@ -12,19 +17,30 @@ export async function getWeatherByCity(city) {
       return { error: "City not found" };
     }
 
-    const normalized = normalizeWeather(data, appState.unit);
+    const normalizedWeather = normalizeWeather(data, appState.unit);
 
-    // 1️⃣ set full weather snapshot
-    setWeatherData(normalized);
+    // 1️⃣ base weather snapshot
+    setWeatherData(normalizedWeather);
 
-    // 2️⃣ day/night comes FROM normalized data
-    setDayMode(normalized.isDay);
+    // 2️⃣ day/night derived from normalized weather
+    setDayMode(normalizedWeather.isDay);
 
-    // 3️⃣ enrich weather with UV (same state object)
-    const uv = await fetchUVIndex(normalized.lat, normalized.lon);
+    // 3️⃣ UV enrichment
+    const uv = await fetchUVIndex(
+      normalizedWeather.lat,
+      normalizedWeather.lon
+    );
     setWeatherData({ uvIndex: uv });
 
-    return { weather: normalized };
+    // 4️⃣ AQI enrichment (parallel domain)
+    const airRaw = await fetchAirQuality(
+      normalizedWeather.lat,
+      normalizedWeather.lon
+    );
+    const normalizedAQI = normalizeAirQuality(airRaw);
+    setWeatherData({ airQuality: normalizedAQI });
+
+    return { weather: normalizedWeather };
   } catch (err) {
     console.error("getWeatherByCity failed:", err);
     return { error: "Network error" };

@@ -1,19 +1,32 @@
 export const appState = {
   city: "",
   weather: {
-  city: null,
-  lat: null,
-  lon: null,
-  temp: null,
-  feelsLike: null,
-  humidity: null,
-  wind: null,
-  description: "",
-  main: "",
-  clouds: 0,
-  rainVolume: 0,
-  snowVolume: 0,
-  uvIndex: null},
+    city: null,
+    lat: null,
+    lon: null,
+
+    // temperature
+    temp: null,
+    feelsLike: null,
+
+    // atmosphere
+    humidity: null,
+    wind: null,
+    description: "",
+    main: "",
+    clouds: 0,
+    rainVolume: 0,
+    snowVolume: 0,
+
+    // enrichments
+    uvIndex: null,
+    airQuality: {
+      index: null,
+      level: "Unavailable",
+      color: "gray",
+    },
+  },
+
   isDay: true,
   unit: "metric",
   favorites: [],

@@ -1,6 +1,11 @@
 import { appState, setCity, setWeatherData, setDayMode } from "../state.js";
-import { fetchWeatherByCoords, fetchUVIndex } from "../services/weatherAPI.js";
+import {
+  fetchWeatherByCoords,
+  fetchUVIndex,
+  fetchAirQuality,
+} from "../services/weatherAPI.js";
 import { normalizeWeather } from "./normalizeWeather.js";
+import { normalizeAirQuality } from "./normalizeAirQuality.js";
 
 export async function getWeatherByLocation(lat, lon) {
   try {
@@ -10,22 +15,33 @@ export async function getWeatherByLocation(lat, lon) {
       return { error: "Location weather not found" };
     }
 
-    const normalized = normalizeWeather(data, appState.unit);
+    const normalizedWeather = normalizeWeather(data, appState.unit);
 
-    // 1️⃣ city comes from normalized weather
-    setCity(normalized.city);
+    // 1️⃣ city from normalized weather
+    setCity(normalizedWeather.city);
 
-    // 2️⃣ set base weather snapshot
-    setWeatherData(normalized);
+    // 2️⃣ base weather snapshot
+    setWeatherData(normalizedWeather);
 
-    // 3️⃣ day/night comes from normalized data
-    setDayMode(normalized.isDay);
+    // 3️⃣ day/night
+    setDayMode(normalizedWeather.isDay);
 
-    // 4️⃣ enrich weather with UV
-    const uv = await fetchUVIndex(normalized.lat, normalized.lon);
+    // 4️⃣ UV
+    const uv = await fetchUVIndex(
+      normalizedWeather.lat,
+      normalizedWeather.lon
+    );
     setWeatherData({ uvIndex: uv });
 
-    return { weather: normalized };
+    // 5️⃣ AQI
+    const airRaw = await fetchAirQuality(
+      normalizedWeather.lat,
+      normalizedWeather.lon
+    );
+    const normalizedAQI = normalizeAirQuality(airRaw);
+    setWeatherData({ airQuality: normalizedAQI });
+
+    return { weather: normalizedWeather };
   } catch (err) {
     console.error("getWeatherByLocation failed:", err);
     return { error: "Failed to fetch location weather" };
