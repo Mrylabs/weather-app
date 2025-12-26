@@ -1,45 +1,54 @@
-import { elements } from "./elements";
-
 let forecastChart = null;
 
-export function renderForecastChart(daily, unit = "metric") {
-  if (!daily || !elements.chartCanvas) return;
+export function renderForecastChart(forecast) {
+  if (!forecast || forecast.length === 0) return;
 
-  const labels = daily.map(day =>
-    new Date(day.dt * 1000).toLocaleDateString("en-US", { weekday: "short" })
-  );
+  const canvas = document.getElementById("forecastChart");
+  if (!canvas) return;
 
-  const temps = daily.map(day => {
-    const c = Math.round(day.temp.day);
-    return unit === "metric" ? c : Math.round(c * 9/5 + 32);
-  });
+  const ctx = canvas.getContext("2d");
 
-  destroyForecastChart();
-
-  const ctx = elements.chartCanvas.getContext("2d");
+  if (forecastChart) {
+    forecastChart.destroy();
+  }
 
   forecastChart = new Chart(ctx, {
     type: "line",
     data: {
-      labels,
+      labels: forecast.map(day => day.label),
       datasets: [
         {
-          label: "Daily Temperature",
-          data: temps,
+          label: "Max",
+          data: forecast.map(day => day.max),
           borderWidth: 2,
-          tension: 0.4
-        }
-      ]
+          tension: 0.4,
+        },
+        {
+          label: "Min",
+          data: forecast.map(day => day.min),
+          borderWidth: 2,
+          tension: 0.4,
+        },
+      ],
     },
     options: {
-      scales: { y: { beginAtZero: false } },
-      plugins: { legend: { display: false } }
-    }
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: { color: "#fff" },
+        },
+      },
+      scales: {
+        x: {
+          ticks: { color: "#fff" },
+          grid: { display: false },
+        },
+        y: {
+          ticks: { color: "#fff" },
+          grid: { color: "rgba(255,255,255,0.1)" },
+        },
+      },
+    },
   });
-}
-
-export function destroyForecastChart() {
-  if (!forecastChart) return;
-  forecastChart.destroy();
-  forecastChart = null;
 }

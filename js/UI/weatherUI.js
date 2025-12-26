@@ -1,6 +1,8 @@
 import { elements } from "./elements.js";
 import { applyParticles } from "./particlesUI.js";
 import { applyClouds } from "./cloudsUI.js";
+import { renderForecastChart } from "./chartsUI.js";
+
 
 // Helpers
 export function clearWeatherUI() {
@@ -113,7 +115,11 @@ export function renderWeather(state) {
   }
   if (airQuality) {
   updateAQI(airQuality);
-}
+  }
+
+  if (weather.forecast?.length) {
+  renderForecastChart(weather.forecast);
+  }
 }
 
 export function renderError(msg) {

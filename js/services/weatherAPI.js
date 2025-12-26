@@ -11,32 +11,12 @@ export async function fetchWeatherByCoords(lat, lon, unit = "metric") {
   return fetchJSON(url);
 }
 
-/*export async function fetchDailyForecast(lat, lon, unit = "metric") {
+export async function fetchForecastByCoords(lat, lon, unit = "metric") {
   const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${unit}&appid=${API_KEY}`;
-  console.log("🌐 Weather status:", raw);
-  const raw = await fetchJSON(url);
-
-  // --- Group into daily averages ---
-  const dayBuckets = {};
-
-  raw.list.forEach(entry => {
-    const dateKey = new Date(entry.dt * 1000).toISOString().split("T")[0];
-    if (!dayBuckets[dateKey]) dayBuckets[dateKey] = [];
-    dayBuckets[dateKey].push(entry.main.temp);
-  });
-
-  const daily = Object.keys(dayBuckets).slice(0, 5).map(dateKey => {
-    const temps = dayBuckets[dateKey];
-    const avg = temps.reduce((a, b) => a + b) / temps.length;
-
-    return {
-      dt: new Date(dateKey).getTime() / 1000,
-      temp: { day: avg },
-    };
-  });
-
-  return { daily };
-}*/
+  console.log("🌐 Fetching forecast:", url);
+  return fetchJSON(url);
+}
+window.__testForecast = fetchForecastByCoords;
 
 export async function fetchUVIndex(lat, lon) {
   const url = `https://api.openweathermap.org/data/2.5/uvi?appid=${API_KEY}&lat=${lat}&lon=${lon}`;
