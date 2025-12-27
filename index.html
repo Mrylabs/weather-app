@@ -9,75 +9,89 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <header class="header">
-    <div class="header-left">
+
+<header class="header">
+  <div class="header-left">
     <div class="favorite-dropdown">
       <button class="favorite-toggle-btn">⭐ Favorites ▼</button>
       <ul class="favorite-dropdown-list hidden"></ul>
     </div>
-    </div>
+  </div>
 
-    <h1>Mry's Weather App</h1>
+  <h1>Mry's Weather App</h1>
 
-    <div class="header-right">
-      <button class="unit-toggle">°C / °F</button>
-    </div>
-  </header>
+  <div class="header-right">
+    <button class="unit-toggle">°C / °F</button>
+  </div>
+</header>
 
-  <section class="search-section">
-    <button class="get-location-btn">
-      <img src="./assets/location.svg" class="location-icon">
-    </button>
+<section class="search-section">
+  <button class="get-location-btn">
+    <img src="./assets/location.svg" class="location-icon">
+  </button>
 
   <div class="search-with-fav">
-     <input
+    <input
       type="text"
       class="search-input"
-      placeholder="Enter city..."/>
-
-      <button class="favorite-btn" title="Add to favorites">☆</button>
+      placeholder="Enter city..." />
+    <button class="favorite-btn" title="Add to favorites">☆</button>
   </div>
-  
-    <button class="search-btn">Search</button>
-  </section>
+
+  <button class="search-btn">Search</button>
+</section>
 
 <section class="weather-info">
   <p class="error-message"></p>
 </section>
 
-  
+<!-- 🌤 WEATHER DASHBOARD -->
 <div class="weather-details">
+  <div class="weather-dashboard">
 
-  <div class="weather-grid">
+    <!-- LEFT COLUMN -->
+    <div class="weather-left-column">
 
-    <div class="card-main">
-      <span id="weather-icon"></span>
-      <h2 id="city-title" class="city-title"></h2>
-      <p id="temperature" class="temperature-text"></p>
-      <p id="description">—</p>
+      <!-- MAIN WEATHER -->
+      <div class="card-main">
+        <div class="weather-main">
+          <div class="weather-left">
+            <span id="weather-icon"></span>
+
+            <div class="weather-text">
+              <h2 id="city-title" class="city-title"></h2>
+              <p id="description">—</p>
+            </div>
+          </div>
+
+          <div class="weather-right">
+            <p id="temperature" class="temperature-text"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORECAST -->
+      <div class="card-forecast">
+        <canvas id="forecastChart"></canvas>
+      </div>
+
     </div>
 
-    <div class="card-small" id="feels-like">Feels Like: --</div>
-    <div class="card-small" id="uv-index">UV Index: --</div>
-    <div class="card-small" id="air-quality">AQI: --</div>
-
-    <div class="info-row">
+    <!-- RIGHT COLUMN (STACKED STATS) -->
+    <div class="weather-right-column">
+      <div class="card-small" id="feels-like">Feels Like: --</div>
+      <div class="card-small" id="uv-index">UV Index: --</div>
+      <div class="card-small" id="air-quality">AQI: --</div>
       <div class="card-small" id="wind">Wind: --</div>
       <div class="card-small" id="humidity">Humidity: --%</div>
     </div>
 
-    <div class="card-forecast">
-      <canvas id="forecastChart"></canvas>
-    </div>
-
   </div>
 </div>
-</section>
 
-  <div id="weather-particles"></div>
-  <div id="cloud-layer"></div>
-  
- <script type="module" src="./js/app.js"></script>
+<div id="weather-particles"></div>
+<div id="cloud-layer"></div>
 
+<script type="module" src="./js/app.js"></script>
 </body>
 </html>
