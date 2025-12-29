@@ -8,7 +8,10 @@ export function setupFavoriteDropdown() {
   const toggleBtn = elements.favoriteDropdownToggle;
   const dropdownList = elements.favoriteDropdownList;
 
-  if (!toggleBtn || !dropdownList) return;
+  if (!toggleBtn || !dropdownList) {
+  console.warn("Favorite dropdown elements not found");
+  return;
+ }
 
   toggleBtn.addEventListener("click", (e) => {
     e.stopPropagation();

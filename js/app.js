@@ -1,4 +1,3 @@
-import { elements } from "./UI/elements.js";
 import {
   handleCitySearch,
   handleEnterKey,
@@ -6,6 +5,10 @@ import {
   handleUnitToggle,
   initControllerOnLoad
 } from "./controller.js";
+
+import { initFavorites } from "./use-cases/favorites/favorites.js";
+import { renderFavoriteCities } from "./UI/favoritesUI.js";
+import { setupFavoriteDropdown } from "./UI/favoritesDropdown.js";
 
 const searchBtn = document.querySelector(".search-btn");
 const cityInput = document.querySelector(".search-input");
@@ -23,4 +26,9 @@ cityInput.addEventListener("keydown", (e) => {
 locationBtn.addEventListener("click", handleLocationRequest);
 unitToggle.addEventListener("click", handleUnitToggle);
 
-window.addEventListener("load", initControllerOnLoad);
+window.addEventListener("load", () => {
+  const favorites = initFavorites();
+  renderFavoriteCities(favorites);
+  setupFavoriteDropdown();
+  initControllerOnLoad();
+});
