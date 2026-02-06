@@ -2,7 +2,7 @@
 
 A **production‑grade Weather Application** built with **Vanilla JavaScript**, designed to deeply understand **frontend architecture, state management, and data flow** before moving to frameworks like React.
 
-This project intentionally avoids frameworks to expose *how modern apps actually work under the hood* — from API boundaries to UI rendering pipelines.
+This project intentionally avoids frameworks to expose *how modern apps actually work under the hood* — from API boundaries, backend proxies to UI rendering pipelines.
 
 ---
 
@@ -11,6 +11,7 @@ This project intentionally avoids frameworks to expose *how modern apps actually
 * Build a real‑world weather app with live data
 * Enforce **clean separation of concerns**
 * Prevent UI–API coupling
+* Secure sensitive API keys
 * Design a **React‑ready architecture** in plain JavaScript
 * Learn to debug **state and data flow**, not just DOM issues
 
@@ -32,13 +33,14 @@ Everything in the codebase exists to protect these rules.
 
 ```
 js/
-├─ services/                 # API calls only (no state, no UI)
+├─ services/                 # Frontend API adapter (talks to backend only)
 │  └─ weatherAPI.js
 │
 ├─ use-cases/                # Application logic & state updates
 │  ├─ getWeatherByCity.js
 │  ├─ getWeatherByLocation.js
 │  ├─ normalizeWeather.js
+│  ├─ normalizeForecast.js
 │  └─ favorites/
 │     ├─ favorites.js
 │     └─ storage.js
@@ -55,6 +57,11 @@ js/
 ├─ controller.js             # Event handling & orchestration
 ├─ state.js                  # Single source of truth
 └─ app.js                    # App bootstrap
+
+server/
+├─ index.js                  # Minimal Node.js proxy server
+├─ package.json
+└─ .env                      # API key (ignored by Git)
 ```
 
 ---
@@ -66,9 +73,11 @@ User Action
    ↓
 Controller
    ↓
-Use‑Case (City / Location)
+Use-Case (City / Location)
    ↓
-Service (API Fetch)
+Service (Frontend → Backend Proxy)
+   ↓
+External API (OpenWeather)
    ↓
 Normalizer (API → Domain Model)
    ↓
@@ -76,11 +85,20 @@ State Update (merged, not replaced)
    ↓
 UI Render (from state only)
 ```
+UI never touches raw API data.
+Frontend never sees the API key.
+---
 
-**Important rule:**
+## 🔐 API Key Security (Backend Proxy)
 
-> UI never touches raw API data.
+To prevent exposing the OpenWeather API key in the browser, the app uses a minimal Node.js backend proxy.
 
+key points:
+
+* The frontend never talks directly to OpenWeather
+* All API requests go through `http://localhost:3000`
+* The API key lives in `server/.env` and is never committed
+* This mirrors real production setups (Vercel, Netlify, etc.)
 ---
 
 ## 🧩 Services Layer (API Only)
@@ -89,10 +107,10 @@ UI Render (from state only)
 
 Responsibilities:
 
-* Fetch weather by city
+* Call backend proxy endpoints
 * Fetch weather by coordinates
-* Fetch UV index
-* fetch forcast & air quality
+* Fetch forecast index
+* fetch optional enrichments (UV, AQI)
 
 Rules:
 
@@ -157,6 +175,7 @@ State owns:
 * `unit`
 * `isDay`
 * `favorites`
+* `airQuality`
 * `uvIndex`
 
 ---
@@ -208,7 +227,7 @@ Responsibilities:
 * Render weather from state
 * Apply backgrounds & day/night mood
 * Render particles & clouds
-* Display UV index
+* Display UV & AQI when available
 * Render favorites dropdown
 * Render forecast charts
 
@@ -244,10 +263,10 @@ Controller does **not**:
 ## 🧪 Debugging Lessons Learned
 
 * Silent UI failures often mean **broken state**, not broken DOM
-* State setters must **merge**, not replace
-* Every entry point must normalize data
+* Backend errors propagate as frontend symptoms
+* API boundaries clarify responsibilities
 * Removing legacy files is sometimes the real fix
-* UI errors often reveal architectural issues upstream
+* Clean architecture makes debugging obvious
 
 ---
 
@@ -256,21 +275,18 @@ Controller does **not**:
 This project demonstrates:
 
 * Real‑world frontend architecture
-* Clean separation of concerns
+* Secure API key handling
+* Backend–frontend separation
 * Production‑grade debugging skills
-* Thoughtful state management
 * A clear migration path to React
-
-This is **not tutorial‑style code**. it reflects how scalable frontend systems are built.
 
 ---
 
 ## 🔮 Next Steps
 
-* Re‑introduce 7‑day forecast with clean normalization
-* Visualize forecast using chartUI.js
-* Re‑introduce Air Quality Index (AQI) with proper normalization
-* Deploy with Vercel
+* Improve UV fallback handling
+* Expand AQI normalization
+* Add tests around use-cases
 * Migrate architecture directly to React without redesign
 
 ---
