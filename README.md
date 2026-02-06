@@ -65,6 +65,17 @@ server/
 ```
 
 ---
+## 🔐 API Key Security (Backend Proxy)
+
+To prevent exposing the OpenWeather API key in the browser, the app uses a minimal Node.js backend proxy.
+
+key points:
+
+* The frontend never talks directly to OpenWeather
+* All API requests go through `http://localhost:3000`
+* The API key lives in `server/.env` and is never committed
+* This mirrors real production setups (Vercel, Netlify, etc.)
+---
 
 ## 🔄 Data Flow (Single Render Pipeline)
 
@@ -89,17 +100,6 @@ UI never touches raw API data.
 Frontend never sees the API key.
 ---
 
-## 🔐 API Key Security (Backend Proxy)
-
-To prevent exposing the OpenWeather API key in the browser, the app uses a minimal Node.js backend proxy.
-
-key points:
-
-* The frontend never talks directly to OpenWeather
-* All API requests go through `http://localhost:3000`
-* The API key lives in `server/.env` and is never committed
-* This mirrors real production setups (Vercel, Netlify, etc.)
----
 
 ## 🧩 Services Layer (API Only)
 
