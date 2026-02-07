@@ -1,8 +1,8 @@
-const BASE_URL = "http://localhost:3000";
+const BACKEND_BASE_URL = "https://weather-app-backend-4lng.onrender.com";
 
-
+// -------- CURRENT WEATHER --------
 export async function fetchWeatherByCity(city, unit = "metric") {
-  const url = `http://localhost:3000/weather?city=${encodeURIComponent(
+  const url = `${BACKEND_BASE_URL}/weather?city=${encodeURIComponent(
     city
   )}&unit=${unit}`;
 
@@ -10,20 +10,18 @@ export async function fetchWeatherByCity(city, unit = "metric") {
   return fetchJSON(url);
 }
 
-
-export async function fetchWeatherByCoords(lat, lon) {
-  const url = `${BASE_URL}/weather?lat=${lat}&lon=${lon}`;
+export async function fetchWeatherByCoords(lat, lon, unit = "metric") {
+  const url = `${BACKEND_BASE_URL}/weather?lat=${lat}&lon=${lon}&unit=${unit}`;
   return fetchJSON(url);
 }
 
+// -------- FORECAST --------
 export async function fetchForecastByCoords(lat, lon, unit = "metric") {
-  return fetchJSON(
-    `${BASE_URL}/forecast?lat=${lat}&lon=${lon}&unit=${unit}`
-  );
+  const url = `${BACKEND_BASE_URL}/forecast?lat=${lat}&lon=${lon}&unit=${unit}`;
+  return fetchJSON(url);
 }
 
-window.__testForecast = fetchForecastByCoords;
-
+// -------- OPTIONAL / FUTURE --------
 export async function fetchUVIndex() {
   return null;
 }
@@ -32,7 +30,7 @@ export async function fetchAirQuality() {
   return null;
 }
 
-// --- Shared reusable fetch helper ---
+// -------- SHARED FETCH HELPER --------
 async function fetchJSON(url) {
   const response = await fetch(url);
 
