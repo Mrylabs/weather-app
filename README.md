@@ -4,6 +4,8 @@ A **production‑grade Weather Application** built with **Vanilla JavaScript**, 
 
 This project intentionally avoids frameworks to expose *how modern apps actually work under the hood* — from API boundaries, backend proxies to UI rendering pipelines.
 
+🔗 Live Demo: https://mrylabs.github.io/weather-app/
+
 ---
 
 ## 🎯 Project Goals
