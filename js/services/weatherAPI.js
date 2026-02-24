@@ -1,5 +1,5 @@
 const BACKEND_BASE_URL = "https://weather-app-backend-4lng.onrender.com";
-const REQUEST_TIMEOUT = 20000; // 20 seconds max wait
+const REQUEST_TIMEOUT = 30000; // 30 seconds max wait
 
 // -------- CURRENT WEATHER --------
 export async function fetchWeatherByCity(city, unit = "metric") {

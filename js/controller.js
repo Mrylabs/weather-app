@@ -39,6 +39,8 @@ export async function handleCitySearch(city) {
 
     updateFavoriteButton(isFavorite(city));
     renderWeather(appState);
+    //save cach
+    localStorage.setItem("lastWeather", JSON.stringify(appState));
 
   } catch (error) {
     renderError(error.message || "Something went wrong");
@@ -103,6 +105,20 @@ export function initControllerOnLoad() {
 
   elements.addFavoriteBtn.addEventListener("click", handleAddFavorite);
 
+  // Render cached weather instantly
+  const cached = localStorage.getItem("lastWeather");
+
+  if (cached) {
+    try {
+      Object.assign(appState, JSON.parse(cached));
+      renderWeather(appState);
+      updateFavoriteButton(isFavorite(appState.city));
+    } catch (e) {
+      console.warn("Cache parse failed");
+    }
+  }
+
+  // Then fetch fresh data
   if (appState.city) {
     handleCitySearch(appState.city);
   } else {
