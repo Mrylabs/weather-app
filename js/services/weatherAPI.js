@@ -1,4 +1,5 @@
 const BACKEND_BASE_URL = "https://weather-app-backend-4lng.onrender.com";
+const REQUEST_TIMEOUT = 20000; // 20 seconds max wait
 
 // -------- CURRENT WEATHER --------
 export async function fetchWeatherByCity(city, unit = "metric") {
@@ -32,11 +33,31 @@ export async function fetchAirQuality() {
 
 // -------- SHARED FETCH HELPER --------
 async function fetchJSON(url) {
-  const response = await fetch(url);
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
 
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
+  try {
+    const response = await fetch(url, {
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Request failed (${response.status}): ${errorText || "Unknown error"}`
+      );
+    }
+
+    return await response.json();
+  } catch (error) {
+    if (error.name === "AbortError") {
+      throw new Error("Request timed out. Please try again.");
+    }
+
+    throw new Error(
+      error.message || "Network error. Please check your connection."
+    );
   }
-
-  return response.json();
 }

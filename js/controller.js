@@ -11,20 +11,40 @@ import {
 } from "./use-cases/favorites/favorites.js";
 import { renderError } from "./UI/weatherUI.js";
 
+const loader = document.getElementById("loader");
+
+function showLoader() {
+  loader?.classList.remove("hidden");
+}
+function hideLoader() {
+  loader?.classList.add("hidden");
+}
+
+
 export async function handleCitySearch(city) {
   if (!city) {
     renderError("Please enter a city");
     return;
   }
 
-  const result = await getWeatherByCity(city);
-  if (result?.error) {
-    renderError(result.error);
-    return;
-  }
+  showLoader();
 
-  updateFavoriteButton(isFavorite(city));
-  renderWeather(appState);
+  try {
+    const result = await getWeatherByCity(city);
+
+    if (result?.error) {
+      renderError(result.error);
+      return;
+    }
+
+    updateFavoriteButton(isFavorite(city));
+    renderWeather(appState);
+
+  } catch (error) {
+    renderError(error.message || "Something went wrong");
+  } finally {
+    hideLoader();
+  }
 }
 
 export function handleAddFavorite() {
@@ -38,22 +58,34 @@ export async function handleLocationRequest() {
     return handleCitySearch("Vienna");
   }
 
+  showLoader();
+
   navigator.geolocation.getCurrentPosition(
     async ({ coords }) => {
-      const result = await getWeatherByLocation(
-        coords.latitude,
-        coords.longitude
-      );
+      try {
+        const result = await getWeatherByLocation(
+          coords.latitude,
+          coords.longitude
+        );
 
-      if (result?.error) {
-        handleCitySearch("Vienna");
-        return;
+        if (result?.error) {
+          handleCitySearch("Vienna");
+          return;
+        }
+
+        updateFavoriteButton(isFavorite(appState.city));
+        renderWeather(appState);
+
+      } catch (error) {
+        renderError(error.message || "Location failed");
+      } finally {
+        hideLoader();
       }
-
-      updateFavoriteButton(isFavorite(appState.city));
-      renderWeather(appState);
     },
-    () => handleCitySearch("Vienna")
+    () => {
+      hideLoader();
+      handleCitySearch("Vienna");
+    }
   );
 }
 
