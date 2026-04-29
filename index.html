@@ -31,15 +31,16 @@
 </header>
 
 <section class="search-section">
-  <button class="get-location-btn">
-    <img src="./assets/location.svg" class="location-icon">
-  </button>
+  <div class="search-bar">
+    <button class="get-location-btn" title="Use my location">
+      <img src="./assets/location.svg" class="location-icon" alt="Location icon">
+    </button>
 
-  <div class="search-with-fav">
     <input
       type="text"
       class="search-input"
       placeholder="Enter city..." />
+
     <button class="favorite-btn" title="Add to favorites">☆</button>
   </div>
 
@@ -54,9 +55,7 @@
 <div class="weather-details">
   <div class="weather-dashboard">
 
-    <!-- LEFT COLUMN -->
-    <div class="weather-left-column">
-
+    <div class="top-row">
       <!-- MAIN WEATHER -->
       <div class="card-main">
         <div class="weather-main">
@@ -75,20 +74,38 @@
         </div>
       </div>
 
-      <!-- FORECAST -->
-      <div class="card-forecast">
-        <canvas id="forecastChart"></canvas>
-      </div>
+      <!-- STATS -->
+      <div class="weather-right-column">
+        <div class="card-small" id="feels-like">
+          <span class="label">Feels like</span>
+          <span class="value">Unavailable</span>
+        </div>
 
+        <div class="card-small" id="uv-index">
+          <span class="label">UV Index</span>
+          <span class="value">Unavailable</span>
+        </div>
+
+        <div class="card-small" id="air-quality">
+          <span class="label">Air Quality</span>
+          <span class="value">Unavailable</span>
+        </div>
+
+        <div class="card-small" id="wind">
+          <span class="label">Wind</span>
+          <span class="value">Unavailable</span>
+        </div>
+
+        <div class="card-small" id="humidity">
+          <span class="label">Humidity</span>
+          <span class="value">Unavailable</span>
+        </div>
+      </div>
     </div>
 
-    <!-- RIGHT COLUMN (STACKED STATS) -->
-    <div class="weather-right-column">
-      <div class="card-small" id="feels-like">Feels Like: --</div>
-      <div class="card-small" id="uv-index">UV Index: --</div>
-      <div class="card-small" id="air-quality">AQI: --</div>
-      <div class="card-small" id="wind">Wind: --</div>
-      <div class="card-small" id="humidity">Humidity: --%</div>
+    <!-- FORECAST FULL WIDTH -->
+    <div class="card-forecast forecast-full">
+      <canvas id="forecastChart"></canvas>
     </div>
 
   </div>
